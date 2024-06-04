@@ -10,3 +10,16 @@ C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\FifaLib\obj\Debug\net7.0\FifaLib.pdb
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\FifaLib\obj\Debug\net7.0\ref\FifaLib.dll
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\FifaLib\obj\Debug\net7.0\FifaLib.csproj.AssemblyReference.cache
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\FifaLib\bin\Debug\net7.0\FifaLib.deps.json
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\FifaLib\bin\Debug\net7.0\FifaLib.dll
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\FifaLib\bin\Debug\net7.0\FifaLib.pdb
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\FifaLib\obj\Debug\net7.0\FifaLib.csproj.AssemblyReference.cache
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\FifaLib\obj\Debug\net7.0\FifaLib.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\FifaLib\obj\Debug\net7.0\FifaLib.AssemblyInfoInputs.cache
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\FifaLib\obj\Debug\net7.0\FifaLib.AssemblyInfo.cs
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\FifaLib\obj\Debug\net7.0\FifaLib.csproj.CoreCompileInputs.cache
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\FifaLib\obj\Debug\net7.0\FifaLib.sourcelink.json
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\FifaLib\obj\Debug\net7.0\FifaLib.dll
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\FifaLib\obj\Debug\net7.0\refint\FifaLib.dll
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\FifaLib\obj\Debug\net7.0\FifaLib.pdb
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\FifaLib\obj\Debug\net7.0\ref\FifaLib.dll

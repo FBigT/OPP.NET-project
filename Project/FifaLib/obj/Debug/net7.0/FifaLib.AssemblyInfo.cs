@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FifaLib")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fcc7ed54534749f3e08afaf96268b7b5bad93d30")]
 [assembly: System.Reflection.AssemblyProductAttribute("FifaLib")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FifaLib")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

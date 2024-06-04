@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lenovo Legion 5\\OneDrive\\Desktop\\Algebra\\Semester_4\\NET\\Projekt\\Project\\FifaLib\\FifaLib.csproj": {}
+    "C:\\Users\\Lenovo Legion 5\\OneDrive\\Desktop\\Algebra\\Semester_4\\NET\\OPP.NET-project\\Project\\FifaLib\\FifaLib.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lenovo Legion 5\\OneDrive\\Desktop\\Algebra\\Semester_4\\NET\\Projekt\\Project\\FifaLib\\FifaLib.csproj": {
+    "C:\\Users\\Lenovo Legion 5\\OneDrive\\Desktop\\Algebra\\Semester_4\\NET\\OPP.NET-project\\Project\\FifaLib\\FifaLib.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lenovo Legion 5\\OneDrive\\Desktop\\Algebra\\Semester_4\\NET\\Projekt\\Project\\FifaLib\\FifaLib.csproj",
+        "projectUniqueName": "C:\\Users\\Lenovo Legion 5\\OneDrive\\Desktop\\Algebra\\Semester_4\\NET\\OPP.NET-project\\Project\\FifaLib\\FifaLib.csproj",
         "projectName": "FifaLib",
-        "projectPath": "C:\\Users\\Lenovo Legion 5\\OneDrive\\Desktop\\Algebra\\Semester_4\\NET\\Projekt\\Project\\FifaLib\\FifaLib.csproj",
+        "projectPath": "C:\\Users\\Lenovo Legion 5\\OneDrive\\Desktop\\Algebra\\Semester_4\\NET\\OPP.NET-project\\Project\\FifaLib\\FifaLib.csproj",
         "packagesPath": "C:\\Users\\Lenovo Legion 5\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lenovo Legion 5\\OneDrive\\Desktop\\Algebra\\Semester_4\\NET\\Projekt\\Project\\FifaLib\\obj\\",
+        "outputPath": "C:\\Users\\Lenovo Legion 5\\OneDrive\\Desktop\\Algebra\\Semester_4\\NET\\OPP.NET-project\\Project\\FifaLib\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

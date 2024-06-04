@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace FifaLib.Models {
-    internal class Person {
+    public class Visitor {
     }
 }

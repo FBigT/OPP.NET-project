@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "zt0B0+Q4bX1Y+2sw787wczN68LoqAg3sr/A4aeI/wuB2p5ChWQ8XZSV6PHneerdqv3uEXdvziNVZArQVtE9MxQ==",
+  "dgSpecHash": "YKz8d4RtLL0R3hX3r1rALcmgLU2b7cqZYethj5hgmHicyxPPU7/Q5TICrImtAbR8dpjUcOpHXXdhpugaJSKnZQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Lenovo Legion 5\\OneDrive\\Desktop\\Algebra\\Semester_4\\NET\\Projekt\\Project\\FifaLib\\FifaLib.csproj",
+  "projectFilePath": "C:\\Users\\Lenovo Legion 5\\OneDrive\\Desktop\\Algebra\\Semester_4\\NET\\OPP.NET-project\\Project\\FifaLib\\FifaLib.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lenovo Legion 5\\.nuget\\packages\\microsoft.extensions.configuration\\8.0.0\\microsoft.extensions.configuration.8.0.0.nupkg.sha512",
     "C:\\Users\\Lenovo Legion 5\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\8.0.0\\microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",

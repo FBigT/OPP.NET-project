@@ -1,5 +1,5 @@
 ﻿namespace MainForm {
-    partial class Startup {
+    partial class Settings {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -40,7 +40,7 @@
             btnConfirm.TabIndex = 0;
             btnConfirm.Text = "Confirm";
             btnConfirm.UseVisualStyleBackColor = true;
-            btnConfirm.Click += button1_Click;
+            btnConfirm.Click += btnConfirm_Click;
             // 
             // btnCancel
             // 
@@ -58,10 +58,12 @@
             cbxLanguage.Name = "cbxLanguage";
             cbxLanguage.Size = new Size(182, 28);
             cbxLanguage.TabIndex = 2;
+            cbxLanguage.SelectedIndexChanged += cbxLanguage_SelectedIndexChanged;
             // 
             // rbMale
             // 
             rbMale.AutoSize = true;
+            rbMale.Checked = true;
             rbMale.Location = new Point(176, 12);
             rbMale.Name = "rbMale";
             rbMale.Size = new Size(63, 24);
@@ -69,6 +71,7 @@
             rbMale.TabStop = true;
             rbMale.Text = "Male";
             rbMale.UseVisualStyleBackColor = true;
+            rbMale.CheckedChanged += rbMale_CheckedChanged;
             // 
             // rbFemale
             // 
@@ -77,9 +80,9 @@
             rbFemale.Name = "rbFemale";
             rbFemale.Size = new Size(78, 24);
             rbFemale.TabIndex = 4;
-            rbFemale.TabStop = true;
             rbFemale.Text = "Female";
             rbFemale.UseVisualStyleBackColor = true;
+            rbFemale.CheckedChanged += rbFemale_CheckedChanged;
             // 
             // label1
             // 
@@ -99,7 +102,7 @@
             label2.TabIndex = 6;
             label2.Text = "Language";
             // 
-            // Startup
+            // Settings
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -112,8 +115,9 @@
             Controls.Add(btnCancel);
             Controls.Add(btnConfirm);
             FormBorderStyle = FormBorderStyle.Fixed3D;
-            Name = "Startup";
+            Name = "Settings";
             Text = "Settings";
+            Load += Settings_Load;
             ResumeLayout(false);
             PerformLayout();
         }
