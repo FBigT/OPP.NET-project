@@ -1,0 +1,17 @@
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\obj\Debug\net7.0-windows\MainForm.Main.resources
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\obj\Debug\net7.0-windows\MainForm.Startup.resources
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\obj\Debug\net7.0-windows\MainForm.csproj.GenerateResource.cache
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\obj\Debug\net7.0-windows\MainForm.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\obj\Debug\net7.0-windows\MainForm.AssemblyInfoInputs.cache
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\obj\Debug\net7.0-windows\MainForm.AssemblyInfo.cs
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\obj\Debug\net7.0-windows\MainForm.csproj.CoreCompileInputs.cache
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\bin\Debug\net7.0-windows\MainForm.exe
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\bin\Debug\net7.0-windows\MainForm.deps.json
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\bin\Debug\net7.0-windows\MainForm.runtimeconfig.json
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\bin\Debug\net7.0-windows\MainForm.dll
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\bin\Debug\net7.0-windows\MainForm.pdb
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\obj\Debug\net7.0-windows\MainForm.dll
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\obj\Debug\net7.0-windows\refint\MainForm.dll
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\obj\Debug\net7.0-windows\MainForm.pdb
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\obj\Debug\net7.0-windows\MainForm.genruntimeconfig.cache
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\Projekt\Project\MainForm\obj\Debug\net7.0-windows\ref\MainForm.dll
