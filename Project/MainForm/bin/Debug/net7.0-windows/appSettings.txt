@@ -1,2 +1,2 @@
-Language:English
-Gender:Male
+Language:Croatian
+Gender:Female

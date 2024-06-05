@@ -50,3 +50,4 @@ C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\obj\Debug\net7.0-windows\MainForm.csproj.AssemblyReference.cache
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\obj\Debug\net7.0-windows\MainForm.csproj.Up2Date
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\obj\Debug\net7.0-windows\MainForm.Properties.Resources.resources
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\obj\Debug\net7.0-windows\MainForm.PlayerViewerControl.resources

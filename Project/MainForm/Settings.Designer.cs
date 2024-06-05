@@ -50,9 +50,11 @@
             btnCancel.TabIndex = 1;
             btnCancel.Text = "Cancel";
             btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
             // 
             // cbxLanguage
             // 
+            cbxLanguage.DropDownStyle = ComboBoxStyle.DropDownList;
             cbxLanguage.FormattingEnabled = true;
             cbxLanguage.Location = new Point(176, 77);
             cbxLanguage.Name = "cbxLanguage";
