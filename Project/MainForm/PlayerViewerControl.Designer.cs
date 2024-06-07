@@ -1,4 +1,6 @@
-﻿namespace MainForm {
+﻿using FifaLib.Models;
+
+namespace MainForm {
     partial class PlayerViewerControl {
         /// <summary> 
         /// Required designer variable.
@@ -23,23 +25,26 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlayerViewerControl));
             pbMain = new PictureBox();
             label1 = new Label();
             txtbName = new TextBox();
             chbIsCaptain = new CheckBox();
             groupBox1 = new GroupBox();
+            pictureBox1 = new PictureBox();
             label6 = new Label();
             txtbPosition = new TextBox();
             label4 = new Label();
             txtbNumber = new TextBox();
             ((System.ComponentModel.ISupportInitialize)pbMain).BeginInit();
             groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // pbMain
             // 
             pbMain.BorderStyle = BorderStyle.FixedSingle;
-            pbMain.Image = Properties.Resources.no_image_2;
+            pbMain.Image = (Image)resources.GetObject("pbMain.Image");
             pbMain.Location = new Point(234, 18);
             pbMain.Name = "pbMain";
             pbMain.Size = new Size(250, 300);
@@ -77,6 +82,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(pictureBox1);
             groupBox1.Controls.Add(label6);
             groupBox1.Controls.Add(txtbPosition);
             groupBox1.Controls.Add(label4);
@@ -92,6 +98,17 @@
             groupBox1.TabIndex = 4;
             groupBox1.TabStop = false;
             groupBox1.Text = "Player";
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(384, 218);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(100, 100);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 10;
+            pictureBox1.TabStop = false;
+            pictureBox1.Visible = false;
             // 
             // label6
             // 
@@ -137,6 +154,7 @@
             ((System.ComponentModel.ISupportInitialize)pbMain).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -151,5 +169,6 @@
         private TextBox txtbPosition;
         private Label label4;
         private TextBox txtbNumber;
+        private PictureBox pictureBox1;
     }
 }

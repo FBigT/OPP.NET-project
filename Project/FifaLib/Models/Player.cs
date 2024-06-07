@@ -1,14 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FifaLib.Models {
     public class Player {
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonProperty("captain")]
         public bool IsCaptain { get; set; }
@@ -17,10 +12,22 @@ namespace FifaLib.Models {
         public long ShirtNumber { get; set; }
 
         [JsonProperty("position")]
-        public string Position { get; set; }
+        public string? Position { get; set; }
+
+        [JsonIgnore]
+        public bool IsFavourite { get; set; }
+
+        [JsonIgnore]
+        public string? PicturePath { get; private set; }
 
         public override string ToString() {
-            return $"Name:{Name} IsCaptain:{(IsCaptain ? "true" : "false")} ShirtNumber:{ShirtNumber} Position:{Position}";
+            return $"Name:{Name} IsCaptain:{(IsCaptain ? "true" : "false")} ShirtNumber:{ShirtNumber} Position:{Position} PicturePath:{PicturePath}";
+        }
+
+        public string ToDisplay() => $"{Name} ({ShirtNumber})";
+
+        public void SetPicturePath(string path) {
+            PicturePath = path;
         }
     }
 }

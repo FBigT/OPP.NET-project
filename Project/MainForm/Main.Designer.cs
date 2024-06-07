@@ -23,14 +23,15 @@
         ///  the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            components = new System.ComponentModel.Container();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            btnAddImage = new Button();
             lbxOthers = new ListBox();
             lbxFavourites = new ListBox();
             playerViewerControl1 = new PlayerViewerControl();
             label3 = new Label();
             label2 = new Label();
-            chbSort = new CheckBox();
             btnSelect = new Button();
             cblPlayers = new CheckedListBox();
             cbxRepresentation = new ComboBox();
@@ -38,9 +39,11 @@
             tabPage2 = new TabPage();
             menuStrip = new MenuStrip();
             settingsToolStripMenuItem = new ToolStripMenuItem();
+            playerBindingSource = new BindingSource(components);
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             menuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)playerBindingSource).BeginInit();
             SuspendLayout();
             // 
             // tabControl1
@@ -51,17 +54,17 @@
             tabControl1.Location = new Point(0, 31);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(932, 622);
+            tabControl1.Size = new Size(932, 665);
             tabControl1.TabIndex = 1;
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(btnAddImage);
             tabPage1.Controls.Add(lbxOthers);
             tabPage1.Controls.Add(lbxFavourites);
             tabPage1.Controls.Add(playerViewerControl1);
             tabPage1.Controls.Add(label3);
             tabPage1.Controls.Add(label2);
-            tabPage1.Controls.Add(chbSort);
             tabPage1.Controls.Add(btnSelect);
             tabPage1.Controls.Add(cblPlayers);
             tabPage1.Controls.Add(cbxRepresentation);
@@ -69,10 +72,20 @@
             tabPage1.Location = new Point(4, 29);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(924, 589);
+            tabPage1.Size = new Size(924, 632);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Teams and players";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // btnAddImage
+            // 
+            btnAddImage.Location = new Point(422, 595);
+            btnAddImage.Name = "btnAddImage";
+            btnAddImage.Size = new Size(163, 29);
+            btnAddImage.TabIndex = 12;
+            btnAddImage.Text = "Add image";
+            btnAddImage.UseVisualStyleBackColor = true;
+            btnAddImage.Click += btnAddImage_Click;
             // 
             // lbxOthers
             // 
@@ -82,8 +95,10 @@
             lbxOthers.Location = new Point(672, 44);
             lbxOthers.Name = "lbxOthers";
             lbxOthers.SelectionMode = SelectionMode.MultiExtended;
-            lbxOthers.Size = new Size(244, 184);
+            lbxOthers.Size = new Size(244, 204);
+            lbxOthers.Sorted = true;
             lbxOthers.TabIndex = 11;
+            lbxOthers.DoubleClick += lbxOthers_DoubleClick;
             // 
             // lbxFavourites
             // 
@@ -93,13 +108,15 @@
             lbxFavourites.Location = new Point(422, 44);
             lbxFavourites.Name = "lbxFavourites";
             lbxFavourites.SelectionMode = SelectionMode.MultiExtended;
-            lbxFavourites.Size = new Size(244, 184);
+            lbxFavourites.Size = new Size(244, 204);
+            lbxFavourites.Sorted = true;
             lbxFavourites.TabIndex = 0;
+            lbxFavourites.DoubleClick += lbxFavourites_DoubleClick;
             // 
             // playerViewerControl1
             // 
             playerViewerControl1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            playerViewerControl1.Location = new Point(422, 250);
+            playerViewerControl1.Location = new Point(422, 258);
             playerViewerControl1.Name = "playerViewerControl1";
             playerViewerControl1.Size = new Size(494, 331);
             playerViewerControl1.TabIndex = 10;
@@ -124,26 +141,16 @@
             label2.TabIndex = 8;
             label2.Text = "Favourites";
             // 
-            // chbSort
-            // 
-            chbSort.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            chbSort.AutoSize = true;
-            chbSort.Location = new Point(358, 44);
-            chbSort.Name = "chbSort";
-            chbSort.Size = new Size(58, 24);
-            chbSort.TabIndex = 6;
-            chbSort.Text = "Sort";
-            chbSort.UseVisualStyleBackColor = true;
-            // 
             // btnSelect
             // 
             btnSelect.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btnSelect.Location = new Point(7, 552);
+            btnSelect.Location = new Point(7, 595);
             btnSelect.Name = "btnSelect";
-            btnSelect.Size = new Size(312, 29);
+            btnSelect.Size = new Size(311, 29);
             btnSelect.TabIndex = 4;
             btnSelect.Text = "Select";
             btnSelect.UseVisualStyleBackColor = true;
+            btnSelect.Click += btnSelect_Click;
             // 
             // cblPlayers
             // 
@@ -152,7 +159,8 @@
             cblPlayers.FormattingEnabled = true;
             cblPlayers.Location = new Point(7, 78);
             cblPlayers.Name = "cblPlayers";
-            cblPlayers.Size = new Size(310, 444);
+            cblPlayers.Size = new Size(310, 510);
+            cblPlayers.Sorted = true;
             cblPlayers.TabIndex = 3;
             // 
             // cbxRepresentation
@@ -162,6 +170,7 @@
             cbxRepresentation.Location = new Point(6, 44);
             cbxRepresentation.Name = "cbxRepresentation";
             cbxRepresentation.Size = new Size(312, 28);
+            cbxRepresentation.Sorted = true;
             cbxRepresentation.TabIndex = 1;
             cbxRepresentation.SelectedIndexChanged += cbxRepresentation_SelectedIndexChanged;
             // 
@@ -179,7 +188,7 @@
             tabPage2.Location = new Point(4, 29);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(924, 589);
+            tabPage2.Size = new Size(924, 632);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Rankings";
             tabPage2.UseVisualStyleBackColor = true;
@@ -202,11 +211,15 @@
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
+            // playerBindingSource
+            // 
+            playerBindingSource.DataSource = typeof(FifaLib.Models.Player);
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(932, 653);
+            ClientSize = new Size(932, 696);
             Controls.Add(tabControl1);
             Controls.Add(menuStrip);
             MinimumSize = new Size(950, 700);
@@ -218,6 +231,7 @@
             tabPage1.PerformLayout();
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)playerBindingSource).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -233,11 +247,12 @@
         private CheckedListBox cblPlayers;
         private Label label3;
         private Label label2;
-        private CheckBox chbSort;
         private PlayerViewerControl playerViewerControl1;
         private MenuStrip menuStrip;
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ListBox lbxOthers;
         private ListBox lbxFavourites;
+        private BindingSource playerBindingSource;
+        private Button btnAddImage;
     }
 }

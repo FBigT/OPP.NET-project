@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FifaLib.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,8 +15,30 @@ namespace MainForm {
             InitializeComponent();
         }
 
-        private void label2_Click(object sender, EventArgs e) {
+        public void FillView(Player player) {
+            txtbName.Text = player.Name;
+            txtbPosition.Text = player.Position;
+            txtbNumber.Text = player.ShirtNumber.ToString();
+            chbIsCaptain.Checked = player.IsCaptain;
 
+            pictureBox1.Visible = player.IsFavourite;
+        }
+
+        public void SetPicture(string path) {
+            pbMain.Image = Image.FromFile(path);
+        }
+
+        public void SetPicture(Image image) {
+            pbMain.Image = image;
+        }
+
+        public string LoadPictureFromFile() {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.ShowDialog();
+            string filePath = ofd.FileName;
+            if (!File.Exists(filePath)) return string.Empty;
+            pbMain.Image = Image.FromFile(filePath);
+            return filePath;
         }
     }
 }

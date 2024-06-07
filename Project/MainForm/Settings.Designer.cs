@@ -106,8 +106,10 @@
             // 
             // Settings
             // 
+            AcceptButton = btnConfirm;
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            CancelButton = btnCancel;
             ClientSize = new Size(370, 210);
             Controls.Add(label2);
             Controls.Add(label1);

@@ -36,18 +36,6 @@ namespace FifaLib {
 
             try {
                 JArray jPlayers = new JArray();
-
-
-                // must see if there are more players then 23 pre filter
-
-                //foreach (var match in _matches)
-                //{
-                //    if (match["home_team"].Value<string>("code") == filter) {
-                //        jPlayers = new JArray(_matches[0]["home_team_statistics"]["starting_eleven"].Union((JArray)_matches[0]["home_team_statistics"]["substitutes"]));
-                //    }
-                //}
-
-
                 if (_matches[0]["home_team"].Value<string>("code") == filter) {
                     jPlayers = new JArray(_matches[0]["home_team_statistics"]["starting_eleven"].Union((JArray)_matches[0]["home_team_statistics"]["substitutes"]));
                 }
