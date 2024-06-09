@@ -21,14 +21,21 @@ namespace MainForm {
         private List<Player> otherPlayers;
         private Player? selectedPlayer;
 
+        private readonly Repo repo;
+
         public Main() {
             repo = new Repo();
             currentDatasource = DataSource.API;
             playerImagePath = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName + @"\Assets\PlayerImages";
+            CreateAssetDir();
             InitializeComponent();
         }
 
-        private readonly Repo repo;
+        private void CreateAssetDir() {
+            if (!Directory.Exists(playerImagePath)) {
+                Directory.CreateDirectory(playerImagePath);               
+            }
+        }
 
         private void ValidateForm() {
             if (!File.Exists(appData)) {
@@ -172,21 +179,15 @@ namespace MainForm {
                 return;
             }
 
-            string path = playerViewerControl1.LoadPictureFromFile();
-
-            string extension = Path.GetExtension(path);
-
-            string copyPath = Path.Combine(playerImagePath, selectedPlayer.Name + extension);
-
-
-
-            File.Copy(path, copyPath, true);
-
-
-
-            if (string.IsNullOrEmpty(path)) return;
-
-            selectedPlayer.SetPicturePath(path);
+            try {
+                string path = playerViewerControl1.LoadPictureFromFile();
+                string extension = Path.GetExtension(path);
+                string copyPath = Path.Combine(playerImagePath, selectedPlayer.Name + extension);
+                File.Copy(path, copyPath, true);
+            }
+            catch (Exception) {
+                MessageBox.Show("Image load or save failed", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void lbxFavourites_MouseDown(object sender, MouseEventArgs e) {
