@@ -54,7 +54,7 @@
             tabControl1.Location = new Point(0, 31);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(932, 665);
+            tabControl1.Size = new Size(932, 745);
             tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -72,14 +72,15 @@
             tabPage1.Location = new Point(4, 29);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(924, 632);
+            tabPage1.Size = new Size(924, 712);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Teams and players";
             tabPage1.UseVisualStyleBackColor = true;
             // 
             // btnAddImage
             // 
-            btnAddImage.Location = new Point(422, 595);
+            btnAddImage.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnAddImage.Location = new Point(422, 675);
             btnAddImage.Name = "btnAddImage";
             btnAddImage.Size = new Size(163, 29);
             btnAddImage.TabIndex = 12;
@@ -89,26 +90,28 @@
             // 
             // lbxOthers
             // 
+            lbxOthers.AllowDrop = true;
             lbxOthers.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             lbxOthers.FormattingEnabled = true;
             lbxOthers.ItemHeight = 20;
             lbxOthers.Location = new Point(672, 44);
             lbxOthers.Name = "lbxOthers";
             lbxOthers.SelectionMode = SelectionMode.MultiExtended;
-            lbxOthers.Size = new Size(244, 204);
+            lbxOthers.Size = new Size(244, 284);
             lbxOthers.Sorted = true;
             lbxOthers.TabIndex = 11;
             lbxOthers.DoubleClick += lbxOthers_DoubleClick;
             // 
             // lbxFavourites
             // 
+            lbxFavourites.AllowDrop = true;
             lbxFavourites.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             lbxFavourites.FormattingEnabled = true;
             lbxFavourites.ItemHeight = 20;
             lbxFavourites.Location = new Point(422, 44);
             lbxFavourites.Name = "lbxFavourites";
             lbxFavourites.SelectionMode = SelectionMode.MultiExtended;
-            lbxFavourites.Size = new Size(244, 204);
+            lbxFavourites.Size = new Size(244, 284);
             lbxFavourites.Sorted = true;
             lbxFavourites.TabIndex = 0;
             lbxFavourites.DoubleClick += lbxFavourites_DoubleClick;
@@ -116,7 +119,7 @@
             // playerViewerControl1
             // 
             playerViewerControl1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            playerViewerControl1.Location = new Point(422, 258);
+            playerViewerControl1.Location = new Point(422, 338);
             playerViewerControl1.Name = "playerViewerControl1";
             playerViewerControl1.Size = new Size(494, 331);
             playerViewerControl1.TabIndex = 10;
@@ -144,7 +147,7 @@
             // btnSelect
             // 
             btnSelect.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btnSelect.Location = new Point(7, 595);
+            btnSelect.Location = new Point(7, 675);
             btnSelect.Name = "btnSelect";
             btnSelect.Size = new Size(311, 29);
             btnSelect.TabIndex = 4;
@@ -159,7 +162,7 @@
             cblPlayers.FormattingEnabled = true;
             cblPlayers.Location = new Point(7, 78);
             cblPlayers.Name = "cblPlayers";
-            cblPlayers.Size = new Size(310, 510);
+            cblPlayers.Size = new Size(310, 576);
             cblPlayers.Sorted = true;
             cblPlayers.TabIndex = 3;
             // 
@@ -188,7 +191,7 @@
             tabPage2.Location = new Point(4, 29);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(924, 632);
+            tabPage2.Size = new Size(924, 712);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Rankings";
             tabPage2.UseVisualStyleBackColor = true;
@@ -219,7 +222,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(932, 696);
+            ClientSize = new Size(932, 776);
             Controls.Add(tabControl1);
             Controls.Add(menuStrip);
             MinimumSize = new Size(950, 700);

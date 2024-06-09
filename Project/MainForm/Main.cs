@@ -1,5 +1,7 @@
 using FifaLib;
 using FifaLib.Models;
+using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
 
@@ -8,8 +10,11 @@ namespace MainForm {
 
         private Gender currentGender;
         private Language currentLlanguage;
+        private DataSource currentDatasource;
         private readonly string appData = "appSettings.txt";
         private readonly string title = "Favourite representation";
+
+        private readonly string playerImagePath;
 
         private List<Player> loadedPlayers;
         private List<Player> favoritePlayers;
@@ -18,6 +23,8 @@ namespace MainForm {
 
         public Main() {
             repo = new Repo();
+            currentDatasource = DataSource.API;
+            playerImagePath = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName + @"\Assets\PlayerImages";
             InitializeComponent();
         }
 
@@ -37,6 +44,7 @@ namespace MainForm {
                 }
                 currentLlanguage = (Language)Enum.Parse(typeof(Language), lines[0]);
                 currentGender = (Gender)Enum.Parse(typeof(Gender), lines[1]);
+                currentDatasource = (DataSource)Enum.Parse(typeof(DataSource), lines[2]);
 
                 label1.Text = $"{title} ({currentGender})";
             }
@@ -57,14 +65,14 @@ namespace MainForm {
 
         private async void SetRepresentationCbx() {
             cbxRepresentation.Items.Clear();
-            var teams = await repo.FetchTeams(currentGender, DataSource.API);
+            var teams = await repo.FetchTeams(currentGender, currentDatasource);
 
             teams.ForEach(x => { cbxRepresentation.Items.Add($"{x.Country}({x.FifaCode})"); });
             cbxRepresentation.SelectedIndex = 0;
         }
 
         private async void SetPlayerSelectionList() {
-            loadedPlayers = await repo.FetchPlayers(currentGender, DataSource.API, GetFilter());
+            loadedPlayers = await repo.FetchPlayers(currentGender, currentDatasource, GetFilter());
             cblPlayers.Items.Clear();
             loadedPlayers.ForEach(player => {
                 cblPlayers.Items.Add(player.ToDisplay());
@@ -149,8 +157,9 @@ namespace MainForm {
 
             playerViewerControl1.FillView(selectedPlayer);
 
-            if (File.Exists(selectedPlayer.PicturePath)) {
-                playerViewerControl1.SetPicture(selectedPlayer.PicturePath);
+            var files = System.IO.Directory.GetFiles(playerImagePath, selectedPlayer.Name + ".*");
+            if (files.Length > 0) {
+                playerViewerControl1.SetPicture(files[0]);
             }
             else {
                 playerViewerControl1.SetPicture(Properties.Resources.no_image_2);
@@ -158,11 +167,82 @@ namespace MainForm {
         }
 
         private void btnAddImage_Click(object sender, EventArgs e) {
+            if (selectedPlayer == null) {
+                MessageBox.Show("No player selected", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             string path = playerViewerControl1.LoadPictureFromFile();
+
+            string extension = Path.GetExtension(path);
+
+            string copyPath = Path.Combine(playerImagePath, selectedPlayer.Name + extension);
+
+
+
+            File.Copy(path, copyPath, true);
+
+
 
             if (string.IsNullOrEmpty(path)) return;
 
             selectedPlayer.SetPicturePath(path);
         }
+
+        private void lbxFavourites_MouseDown(object sender, MouseEventArgs e) {
+            if (lbxFavourites.Items.Count >= 1) {
+                if (lbxFavourites.SelectedItem != null) {
+                    lbxFavourites.DoDragDrop(lbxFavourites.SelectedItem.ToString(), DragDropEffects.Copy);
+                }
+            }
+        }
+
+        private void lbxOthers_DragEnter(object sender, DragEventArgs e) {
+            if (e.Data.GetDataPresent(DataFormats.Text)) e.Effect = DragDropEffects.Copy;
+            else e.Effect = DragDropEffects.None;
+        }
+
+        private void lbxOthers_DragDrop(object sender, DragEventArgs e) {
+            lbxOthers.Items.Add(e.Data.GetData(DataFormats.Text));
+            lbxFavourites.Items.Remove(e.Data.GetData(DataFormats.Text));
+        }
+
+        private void lbxOthers_MouseDown(object sender, MouseEventArgs e) {
+            if (lbxOthers.Items.Count >= 1) {
+                if (lbxOthers.SelectedItem != null) {
+                    lbxOthers.DoDragDrop(lbxOthers.SelectedItem.ToString(), DragDropEffects.Copy);
+                }
+            }
+        }
+
+        private void lbxFavourites_DragEnter(object sender, DragEventArgs e) {
+            if (e.Data.GetDataPresent(DataFormats.Text)) e.Effect = DragDropEffects.Copy;
+            else e.Effect = DragDropEffects.None;
+        }
+        private void lbxFavourites_DragDrop(object sender, DragEventArgs e) {
+            lbxFavourites.Items.Add(e.Data.GetData(DataFormats.Text));
+            lbxOthers.Items.Remove(e.Data.GetData(DataFormats.Text));
+        }
+
+        private bool DragDropMD(ListBox lb) {
+            if (lb.Items.Count >= 1) {
+                if (lb.SelectedItem != null) {
+                    lb.DoDragDrop(lb.SelectedItem.ToString(), DragDropEffects.Copy);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool PreformDrop(ListBox from, ListBox to, DragEventArgs e) {
+
+            to.Items.Add(e.Data.GetData(DataFormats.Text));
+            from.Items.Remove(e.Data.GetData(DataFormats.Text));
+
+
+
+            return false;
+        }
+
     }
 }

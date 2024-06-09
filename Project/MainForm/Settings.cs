@@ -5,6 +5,7 @@ namespace MainForm {
     public partial class Settings : Form {
         private Gender selectedGender = Gender.Male;
         private Language selectedLanguage = Language.English;
+        private DataSource selectedDatasource = DataSource.API;
         private readonly string appData = "appSettings.txt";
 
         public Settings() {
@@ -16,7 +17,7 @@ namespace MainForm {
         }
 
         private void btnConfirm_Click(object sender, EventArgs e) {
-            string[] data = new string[] { $"Language:{selectedLanguage}", $"Gender:{selectedGender}" };
+            string[] data = new string[] { $"Language:{selectedLanguage}", $"Gender:{selectedGender}", $"Datasource:{selectedDatasource}" };
             File.WriteAllLines(appData, data);
             Close();
         }
@@ -35,6 +36,7 @@ namespace MainForm {
                     }
                     selectedLanguage = (Language)Enum.Parse(typeof(Language), lines[0]);
                     selectedGender = (Gender)Enum.Parse(typeof(Gender), lines[1]);
+                    selectedDatasource = (DataSource)Enum.Parse(typeof(DataSource), lines[2]);
                 }
                 catch (Exception) {
                     Console.WriteLine($"\"{appData}\" parse failed");
@@ -50,6 +52,15 @@ namespace MainForm {
                     rbFemale.Checked = true;
                     rbMale.Checked = !rbFemale.Checked;
                 }
+
+                if (selectedDatasource == DataSource.API) {
+                    rbAPI.Checked = true;
+                    rbFile.Checked = !rbAPI.Checked;
+                }
+                else {
+                    rbFile.Checked = true;
+                    rbAPI.Checked = !rbFile.Checked;
+                }
             }
             else {
                 cbxLanguage.SelectedItem = Language.English;
@@ -62,5 +73,13 @@ namespace MainForm {
         private void rbMale_CheckedChanged(object sender, EventArgs e) => selectedGender = Gender.Male;
 
         private void btnCancel_Click(object sender, EventArgs e) => Close();
+
+        private void rbAPI_CheckedChanged(object sender, EventArgs e) {
+            selectedDatasource = DataSource.API;
+        }
+
+        private void rbFile_CheckedChanged(object sender, EventArgs e) {
+            selectedDatasource = DataSource.File;
+        }
     }
 }

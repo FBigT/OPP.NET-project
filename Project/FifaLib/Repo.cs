@@ -1,6 +1,7 @@
 ﻿using FifaLib.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace FifaLib {
@@ -11,26 +12,61 @@ namespace FifaLib {
         private readonly string API_WomenMatches = "https://worldcup-vua.nullbit.hr/women/matches";
         private readonly string API_Filter = "/country?fifa_code=";
 
+        private string dataFolder = string.Empty;
+
+        private readonly string FILE_Men;
+        private readonly string FILE_Women;
+
         private readonly HttpClient _clinet;
 
         private JArray _matches;
 
         public Repo() {
             _clinet = new HttpClient();
-            _matches = new JArray();
+            _matches = new JArray();;
+
+            try {
+                FILE_Men = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName + @"\FifaLib\Data\men";
+                FILE_Women = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName + @"\FifaLib\Data\women";
+            }
+            catch (Exception e) {
+                throw new IOException("Data folders are corupted or missing\n" + e.Message);
+            }
         }
 
         public async Task<List<TeamResults>> FetchTeams(Gender gender, DataSource source) {
-            string path = gender == Gender.Male ? API_MenTeamsResults : API_WomenTeamsResults;
-            var jstring = await ExtractDataSerialized(source, path);
+            string jstring = string.Empty;
+
+            if (source == DataSource.API) {
+                string path = gender == Gender.Male ? API_MenTeamsResults : API_WomenTeamsResults;
+                jstring = await ExtractDataSerialized(source, path);
+            }
+            else if (source == DataSource.File) {
+                StringBuilder sb = new StringBuilder();
+                string path = gender == Gender.Male ? FILE_Men : FILE_Women;
+                sb.Append(path).Append(@$"\teams.json");
+                jstring = await ExtractDataSerialized(source, sb.ToString());
+            }
             return JsonConvert.DeserializeObject<List<TeamResults>>(jstring);
         }
 
         public async Task<List<Player>> FetchPlayers(Gender gender, DataSource source, string filter) {
-            string path = gender == Gender.Male ? API_MenMatches : API_WomenMatches;
             StringBuilder sb = new StringBuilder();
-            sb.Append(path).Append(API_Filter).Append(filter);
-            var jstring = await ExtractDataSerialized(source, sb.ToString());
+            string jstring = string.Empty;
+
+            if (source == DataSource.API) {
+                sb.Clear();
+                string path = gender == Gender.Male ? API_MenMatches : API_WomenMatches;
+                sb.Append(path).Append(API_Filter).Append(filter);
+                jstring = await ExtractDataSerialized(source, sb.ToString());
+            }
+            else if (source == DataSource.File) {
+                sb.Clear();
+                string path = gender == Gender.Male ? FILE_Men : FILE_Women;
+                sb.Append(path).Append(@$"\matches.json");
+                jstring = await ExtractDataSerialized(source, sb.ToString());
+            }
+
             _matches.Clear();
             _matches = JArray.Parse(jstring);
 
@@ -52,7 +88,7 @@ namespace FifaLib {
 
         private async Task<string> ExtractDataSerialized(DataSource source, string path) {
             if (source == DataSource.API) return await FetchFromApiAsync(path);
-            if (source == DataSource.File) return FetchFromJsonFile("");
+            if (source == DataSource.File) return FetchFromJsonFile(path);
             throw new Exception("Data source is not set or is invalid");
         }
 
@@ -63,7 +99,12 @@ namespace FifaLib {
         }
 
         private string FetchFromJsonFile(string path) {
-            return File.ReadAllText(path);
+            try { 
+                return File.ReadAllText(path);
+            } catch (Exception e){
+                Console.WriteLine("File read failed, file is corupted or missing\n" + e.Message);
+                return string.Empty;
+            }
         }
 
         public void SaveToJsonFile<T>(T data, string path) {
