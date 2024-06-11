@@ -2,35 +2,96 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 
 namespace FifaLib {
     public class Repo {
-        private readonly string API_MenTeamsResults = "https://worldcup-vua.nullbit.hr/men/teams/results";
-        private readonly string API_WomenTeamsResults = "https://worldcup-vua.nullbit.hr/women/teams/results";
-        private readonly string API_MenMatches = "https://worldcup-vua.nullbit.hr/men/matches";
-        private readonly string API_WomenMatches = "https://worldcup-vua.nullbit.hr/women/matches";
-        private readonly string API_Filter = "/country?fifa_code=";
+        private static readonly string API_MenTeamsResults = "https://worldcup-vua.nullbit.hr/men/teams/results";
+        private static readonly string API_WomenTeamsResults = "https://worldcup-vua.nullbit.hr/women/teams/results";
+        private static readonly string API_MenMatches = "https://worldcup-vua.nullbit.hr/men/matches";
+        private static readonly string API_WomenMatches = "https://worldcup-vua.nullbit.hr/women/matches";
+        private static readonly string API_Filter = "/country?fifa_code=";
 
-        private string dataFolder = string.Empty;
+        private static readonly string FILE_Men;
+        private static readonly string FILE_Women;
 
-        private readonly string FILE_Men;
-        private readonly string FILE_Women;
+        private static readonly HttpClient _clinet;
 
-        private readonly HttpClient _clinet;
+        private static JArray _matches;
 
-        private JArray _matches;
+        private static readonly string playerImagePath;
+        private static readonly string appSettingsPath;
 
-        public Repo() {
+        private static readonly string appSettingsFile = "appSettings.txt";
+        private static readonly string userSetingsFile = "userSettings.txt";
+
+        public static readonly Repo instance = new Repo();
+
+        public static Repo Instance { get { return instance; } }
+
+        static Repo() {
             _clinet = new HttpClient();
-            _matches = new JArray();;
+            _matches = new JArray(); ;
 
             try {
+                playerImagePath = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName + @"\Assets\PlayerImages";
+                appSettingsPath = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName + @"\AppSettings";
+
                 FILE_Men = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName + @"\FifaLib\Data\men";
                 FILE_Women = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName + @"\FifaLib\Data\women";
+
+                CheckDirectory();
             }
             catch (Exception e) {
                 throw new IOException("Data folders are corupted or missing\n" + e.Message);
+            }
+        }
+
+        public async Task<List<GameEvent>> FetchEvents(Gender gender, DataSource source, string filter) {
+            var jstring = await FetchMatchesFiltered(gender, source, filter);
+
+            _matches.Clear();
+            _matches = JArray.Parse(jstring);
+
+            try {
+
+                JArray jEvents = new JArray();
+                List<GameEvent> gameEvents = new List<GameEvent>();
+
+                foreach (JObject game in _matches) {
+                    if (game["home_team"].Value<string>("code") == filter)
+                        jEvents = (JArray)game["home_team_events"];
+                    else
+                        jEvents = (JArray)game["away_team_events"];
+                    gameEvents.AddRange(jEvents.ToObject<List<GameEvent>>());
+                }
+                return gameEvents;
+            }
+            catch (Exception e) {
+                Console.WriteLine($"Player event read failed from source: \"{source}\"\n" + e.ToString());
+                throw new IOException();
+            }
+        }
+
+        public async Task<List<Player>> FetchPlayers(Gender gender, DataSource source, string filter) {
+            var jstring = await FetchMatchesFiltered(gender, source, filter);
+
+            _matches.Clear();
+            _matches = JArray.Parse(jstring);
+
+            try {
+                JArray jPlayers = new JArray();
+                if (_matches[0]["home_team"].Value<string>("code") == filter)
+                    jPlayers = new JArray(_matches[0]["home_team_statistics"]["starting_eleven"].Union((JArray)_matches[0]["home_team_statistics"]["substitutes"]));
+                else
+                    jPlayers = new JArray(_matches[0]["away_team_statistics"]["starting_eleven"].Union((JArray)_matches[0]["away_team_statistics"]["substitutes"]));
+
+                return jPlayers.ToObject<List<Player>>();
+            }
+            catch (Exception e) {
+                Console.WriteLine($"Player read failed from source: \"{source}\"\n" + e.ToString());
+                throw new IOException();
             }
         }
 
@@ -50,10 +111,9 @@ namespace FifaLib {
             return JsonConvert.DeserializeObject<List<TeamResults>>(jstring);
         }
 
-        public async Task<List<Player>> FetchPlayers(Gender gender, DataSource source, string filter) {
+        private async Task<string> FetchMatchesFiltered(Gender gender, DataSource source, string filter) {
             StringBuilder sb = new StringBuilder();
             string jstring = string.Empty;
-
             if (source == DataSource.API) {
                 sb.Clear();
                 string path = gender == Gender.Male ? API_MenMatches : API_WomenMatches;
@@ -66,24 +126,7 @@ namespace FifaLib {
                 sb.Append(path).Append(@$"\matches.json");
                 jstring = await ExtractDataSerialized(source, sb.ToString());
             }
-
-            _matches.Clear();
-            _matches = JArray.Parse(jstring);
-
-            try {
-                JArray jPlayers = new JArray();
-                if (_matches[0]["home_team"].Value<string>("code") == filter) {
-                    jPlayers = new JArray(_matches[0]["home_team_statistics"]["starting_eleven"].Union((JArray)_matches[0]["home_team_statistics"]["substitutes"]));
-                }
-                else {
-                    jPlayers = new JArray(_matches[0]["away_team_statistics"]["starting_eleven"].Union((JArray)_matches[0]["away_team_statistics"]["substitutes"]));
-                }
-                return jPlayers.ToObject<List<Player>>();
-            }
-            catch (Exception e) {
-                Console.WriteLine($"Player read failed from source: \"{source}\"\n" + e.ToString());
-                throw new IOException();
-            }
+            return jstring;
         }
 
         private async Task<string> ExtractDataSerialized(DataSource source, string path) {
@@ -99,17 +142,87 @@ namespace FifaLib {
         }
 
         private string FetchFromJsonFile(string path) {
-            try { 
+            try {
                 return File.ReadAllText(path);
-            } catch (Exception e){
+            }
+            catch (Exception e) {
                 Console.WriteLine("File read failed, file is corupted or missing\n" + e.Message);
                 return string.Empty;
             }
         }
 
-        public void SaveToJsonFile<T>(T data, string path) {
-            var jsonString = JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented);
-            //File.WriteAllText(path, jsonString);
+        private static void CheckDirectory() {
+            if (!Directory.Exists(playerImagePath)) {
+                Directory.CreateDirectory(playerImagePath);
+            }
+            if (!Directory.Exists(appSettingsPath)) {
+                Directory.CreateDirectory(appSettingsPath);
+            }
+        }
+
+        public AppSettingsData GetAppSettings() {
+
+            try {
+                string[] lines = File.ReadAllLines(Path.Combine(appSettingsPath, appSettingsFile));
+                for (int i = 0; i < lines.Length; i++) {
+                    lines[i] = lines[i].Trim().Split(':')[1];
+                }
+
+                AppSettingsData asd = new AppSettingsData();
+                asd.language = (Language)Enum.Parse(typeof(Language), lines[0]);
+                asd.gender = (Gender)Enum.Parse(typeof(Gender), lines[1]);
+                asd.source = (DataSource)Enum.Parse(typeof(DataSource), lines[2]);
+
+                return asd;
+            }
+            catch (Exception) {
+                Console.WriteLine("Settings are invalid or corupted");
+                throw new IOException();
+            }
+        }
+
+        public bool SaveAppSettings(Language language, Gender gender, DataSource dataSource) {
+            try {
+                string[] data = new string[] { $"Language:{language}", $"Gender:{gender}", $"Datasource:{dataSource}" };
+                File.WriteAllLines(Path.Combine(appSettingsPath, appSettingsFile), data);
+                return true;
+            }
+            catch (Exception e) {
+                Console.WriteLine("Data save failed\n" + e.Message);
+                return false;
+            }
+        }
+
+        public void SaveUserSettings() {
+
+        }
+
+        public void DestroySettings() => File.Delete(Path.Combine(appSettingsPath, appSettingsFile));
+
+        public void SaveImage(string path, Player player) {
+            string extension = Path.GetExtension(path);
+            string copyPath = Path.Combine(playerImagePath, player.Name + extension);
+            try {
+                File.Copy(path, copyPath, true);
+            }
+            catch (Exception) {
+                throw new IOException();
+            }
+        }
+
+        public (string?, bool) GetImagePath(Player player) {
+            try {
+                var files = System.IO.Directory.GetFiles(playerImagePath, player.Name + ".*");
+                if (files.Length > 0) return (files[0], true);
+                return (null, false);
+            }
+            catch (Exception) {
+                return (null, false);
+            }
+        }
+
+        public bool AppSettingExists() {
+            return File.Exists(Path.Combine(appSettingsPath, appSettingsFile));
         }
     }
 }

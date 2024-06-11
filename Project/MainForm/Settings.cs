@@ -1,4 +1,5 @@
-﻿using FifaLib.Models;
+﻿using FifaLib;
+using FifaLib.Models;
 using System.CodeDom;
 
 namespace MainForm {
@@ -17,8 +18,7 @@ namespace MainForm {
         }
 
         private void btnConfirm_Click(object sender, EventArgs e) {
-            string[] data = new string[] { $"Language:{selectedLanguage}", $"Gender:{selectedGender}", $"Datasource:{selectedDatasource}" };
-            File.WriteAllLines(appData, data);
+            Repo.instance.SaveAppSettings(selectedLanguage, selectedGender, selectedDatasource);
             Close();
         }
 
@@ -28,43 +28,34 @@ namespace MainForm {
             cbxLanguage.DataSource = Enum.GetValues(typeof(Language));
             cbxLanguage.SelectedIndex = 0;
 
-            if (File.Exists(appData)) {
+            if (Repo.instance.AppSettingExists()) {
                 try {
-                    string[] lines = File.ReadAllLines(appData);
-                    for (int i = 0; i < lines.Length; i++) {
-                        lines[i] = lines[i].Trim().Split(':')[1];
+                    AppSettingsData ads = Repo.instance.GetAppSettings();
+                    selectedLanguage = ads.language;
+                    selectedGender = ads.gender;
+                    selectedDatasource = ads.source;
+
+                    if (selectedGender == Gender.Male) {
+                        rbMale.Checked = true;
+                        rbFemale.Checked = !rbMale.Checked;
                     }
-                    selectedLanguage = (Language)Enum.Parse(typeof(Language), lines[0]);
-                    selectedGender = (Gender)Enum.Parse(typeof(Gender), lines[1]);
-                    selectedDatasource = (DataSource)Enum.Parse(typeof(DataSource), lines[2]);
+                    else {
+                        rbFemale.Checked = true;
+                        rbMale.Checked = !rbFemale.Checked;
+                    }
+
+                    if (selectedDatasource == DataSource.API) {
+                        rbAPI.Checked = true;
+                        rbFile.Checked = !rbAPI.Checked;
+                    }
+                    else {
+                        rbFile.Checked = true;
+                        rbAPI.Checked = !rbFile.Checked;
+                    }
                 }
                 catch (Exception) {
-                    Console.WriteLine($"\"{appData}\" parse failed");
-                    return;
+                    MessageBox.Show("An error accured while reading appSettings.txt", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                cbxLanguage.SelectedItem = selectedLanguage;
-
-                if (selectedGender == Gender.Male) {
-                    rbMale.Checked = true;
-                    rbFemale.Checked = !rbMale.Checked;
-                }
-                else {
-                    rbFemale.Checked = true;
-                    rbMale.Checked = !rbFemale.Checked;
-                }
-
-                if (selectedDatasource == DataSource.API) {
-                    rbAPI.Checked = true;
-                    rbFile.Checked = !rbAPI.Checked;
-                }
-                else {
-                    rbFile.Checked = true;
-                    rbAPI.Checked = !rbFile.Checked;
-                }
-            }
-            else {
-                cbxLanguage.SelectedItem = Language.English;
-                selectedLanguage = Language.English;
             }
         }
 
@@ -74,12 +65,8 @@ namespace MainForm {
 
         private void btnCancel_Click(object sender, EventArgs e) => Close();
 
-        private void rbAPI_CheckedChanged(object sender, EventArgs e) {
-            selectedDatasource = DataSource.API;
-        }
+        private void rbAPI_CheckedChanged(object sender, EventArgs e) => selectedDatasource = DataSource.API;
 
-        private void rbFile_CheckedChanged(object sender, EventArgs e) {
-            selectedDatasource = DataSource.File;
-        }
+        private void rbFile_CheckedChanged(object sender, EventArgs e) => selectedDatasource = DataSource.File;
     }
 }

@@ -97,7 +97,7 @@ namespace MainForm {
             groupBox1.Size = new Size(494, 324);
             groupBox1.TabIndex = 4;
             groupBox1.TabStop = false;
-            groupBox1.Text = "Player";
+            groupBox1.Text = "Current Player";
             // 
             // pictureBox1
             // 

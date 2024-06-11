@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ConsoleAppTest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1f24e350c8bde57c23d65952185de11390a6c2e4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7ee62ce2cc9ff7daf59afabb230e78a04180fe98")]
 [assembly: System.Reflection.AssemblyProductAttribute("ConsoleAppTest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ConsoleAppTest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

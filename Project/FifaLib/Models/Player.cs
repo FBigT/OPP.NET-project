@@ -25,9 +25,5 @@ namespace FifaLib.Models {
         }
 
         public string ToDisplay() => $"{Name} ({ShirtNumber})";
-
-        public void SetPicturePath(string path) {
-            PicturePath = path;
-        }
     }
 }

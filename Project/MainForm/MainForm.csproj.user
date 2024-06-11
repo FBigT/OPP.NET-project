@@ -7,6 +7,9 @@
     <Compile Update="PlayerViewerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="PlayerViewerSmallControll.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Settings.cs">
       <SubType>Form</SubType>
     </Compile>
