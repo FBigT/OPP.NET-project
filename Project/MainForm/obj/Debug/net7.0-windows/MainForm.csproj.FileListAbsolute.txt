@@ -52,3 +52,4 @@ C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\obj\Debug\net7.0-windows\MainForm.pdb
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\obj\Debug\net7.0-windows\MainForm.genruntimeconfig.cache
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\obj\Debug\net7.0-windows\ref\MainForm.dll
+C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\obj\Debug\net7.0-windows\MainForm.VisitorViewrControl.resources

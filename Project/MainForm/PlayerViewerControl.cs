@@ -34,11 +34,15 @@ namespace MainForm {
 
         public string LoadPictureFromFile() {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.ShowDialog();
-            string filePath = ofd.FileName;
-            if (!File.Exists(filePath)) return string.Empty;
-            pbMain.Image = Image.FromFile(filePath);
-            return filePath;
+            ofd.Filter = "Image Files (*.jpg, *.jpeg, *.png) | *.jpg; *.jpeg; *.png";
+
+            if (ofd.ShowDialog() == DialogResult.OK) {
+                string filePath = ofd.FileName;
+                if (!File.Exists(filePath)) return string.Empty;
+                pbMain.Image = Image.FromFile(filePath);
+                return filePath;
+            }
+            return string.Empty;
         }
     }
 }

@@ -1,7 +1,10 @@
 using FifaLib;
 using FifaLib.Models;
+using MainForm.Properties;
+using System.Drawing.Printing;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using static System.ComponentModel.Design.ObjectSelectorEditor;
 
@@ -13,16 +16,65 @@ namespace MainForm {
         private DataSource currentDatasource;
         private readonly string title = "Favourite representation";
 
+        private List<TeamResults> loadedTeams;
 
+        private List<GameEvent> loadedGameEvents;
+
+        private List<Visitor> loadedVisitors;
 
         private List<Player> loadedPlayers;
         private List<Player> favoritePlayers;
         private List<Player> otherPlayers;
         private Player? selectedPlayer;
 
+        private string? currentChampionship;
+
+        private int open = 0;
+
         public Main() {
             currentDatasource = DataSource.API;
             InitializeComponent();
+        }
+
+        private async void Main_Load(object sender, EventArgs e) {
+            favoritePlayers = new List<Player>();
+            loadedPlayers = new List<Player>();
+
+            ValidateForm();
+
+            try {
+                loadedTeams = await Repo.Instance.FetchTeams(currentGender, currentDatasource);
+            }
+            catch (Exception) {
+                SaveFavourites();
+            }
+
+            if (Repo.Instance.UserSettingExists()) {
+                try {
+                    currentChampionship = Repo.Instance.GetUserSettings().champoinship;
+                }
+                catch (Exception) {
+                    MessageBox.Show("Settings are invalid or corupted.\nSettings must be set again.", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Repo.Instance.DestroyUserSettings();
+                }
+            }
+            else {
+               loadedTeams.Sort((x, y) => x.FifaCode.CompareTo(y.FifaCode));
+               currentChampionship = loadedTeams.ToArray()[0].FifaCode;
+            }
+
+            SetRepresentationCbx();
+
+            loadedVisitors = await Repo.Instance.FetchVisitors(currentGender, currentDatasource, currentChampionship);
+
+            try {
+                loadedPlayers = await Repo.Instance.FetchPlayers(currentGender, currentDatasource, currentChampionship);
+            }
+            catch (Exception) {
+                MessageBox.Show("Failed to load data.", "Data error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            LoadFavs();
         }
 
         private void ValidateForm() {
@@ -31,7 +83,7 @@ namespace MainForm {
                 settings.ShowDialog();
             }
             try {
-                AppSettingsData ads = Repo.instance.GetAppSettings();
+                AppSettingsData ads = Repo.Instance.GetAppSettings();
                 currentLlanguage = ads.language;
                 currentGender = ads.gender;
                 currentDatasource = ads.source;
@@ -40,40 +92,83 @@ namespace MainForm {
             }
             catch (Exception) {
                 MessageBox.Show("Settings are invalid or corupted.\nSettings must be set again.", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Repo.instance.DestroySettings();
+                Repo.Instance.DestroySettings();
                 Dispose();
             }
         }
+        private void LoadFavs() {
+            try {
+                UserSettingsData usd = Repo.Instance.GetUserSettings();
 
-        private void Main_Load(object sender, EventArgs e) {
-            favoritePlayers = new List<Player>();
-            loadedPlayers = new List<Player>();
+                for (int i = 0; i < usd.faves.Length; i++) {
+                    var fp = otherPlayers.Find(x => x.Name == usd.faves[i]);
 
-            ValidateForm();
-            SetRepresentationCbx();
+                    if (fp != null) {
+                        otherPlayers.Remove(fp);
+                        lbxOthers.Items.Remove(fp.ToDisplay());
+
+                        fp.IsFavourite = true;
+                        favoritePlayers.Add(fp);
+                        lbxFavourites.Items.Add(fp.ToDisplay());
+
+                    }
+                }
+            }
+            catch (Exception) {
+                MessageBox.Show("Settings are invalid or corupted.\nSettings must be set again.", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Repo.Instance.DestroyUserSettings();
+            }
         }
 
-        private async void SetRepresentationCbx() {
+        private void SetRepresentationCbx() {
             cbxRepresentation.Items.Clear();
-            var teams = await Repo.instance.FetchTeams(currentGender, currentDatasource);
 
-            teams.ForEach(x => { cbxRepresentation.Items.Add($"{x.Country}({x.FifaCode})"); });
-            cbxRepresentation.SelectedIndex = 0;
+            loadedTeams.ForEach(x => cbxRepresentation.Items.Add(x.ToDisplay()));
+
+            if (Repo.Instance.UserSettingExists()) {
+                try {
+                    var found = loadedTeams.Find(x => x.FifaCode == currentChampionship);
+
+                    cbxRepresentation.SelectedIndex = cbxRepresentation.FindStringExact($"{found.Country}({found.FifaCode})");
+                }
+                catch (Exception) {
+                    MessageBox.Show("User settings are invalid or corupted.\nUser settings must be set again.", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Repo.Instance.DestroyUserSettings();
+                    Dispose();
+                }
+            }
+            else {
+                Repo.Instance.SaveUserSettings(currentChampionship, false);
+                cbxRepresentation.SelectedIndex = 0;
+            }
         }
 
         private async void SetPlayerSelectionList() {
-            loadedPlayers = await Repo.instance.FetchPlayers(currentGender, currentDatasource, GetFilter());
             lbxAllPlayers.Items.Clear();
+
+            loadedPlayers = await Repo.Instance.FetchPlayers(currentGender, currentDatasource, currentChampionship);
+
+            lbxFavourites.Items.Clear();
+            favoritePlayers.Clear();
+
             loadedPlayers.ForEach(player => {
                 lbxAllPlayers.Items.Add(player.ToDisplay());
             });
             otherPlayers = new List<Player>(loadedPlayers);
+
+            lbxOthers.Items.Clear();
+            otherPlayers.ForEach(p => {
+                lbxOthers.Items.Add(p.ToDisplay());
+            });
         }
 
-        private string GetFilter() {
+        private string SetFilter() {
             var item = cbxRepresentation.SelectedItem;
 
-            if (item == null) return "ENG";
+            if (item == null) {
+                item = cbxRepresentation.Items[0];
+                return item.ToString().Split('(')[1].Split(')')[0];
+            }
 
             return item.ToString().Split('(')[1].Split(')')[0];
         }
@@ -85,25 +180,33 @@ namespace MainForm {
             SetRepresentationCbx();
         }
 
+
         private void cbxRepresentation_SelectedIndexChanged(object sender, EventArgs e) {
+            currentChampionship = SetFilter();
+
             SetPlayerSelectionList();
             SetRankEvents();
+            SetVisitors();
+
+            if (open >= 1) {
+                SaveFavourites();
+            }
+            else {
+                open++;
+            }
         }
 
-        private void lbxFavourites_DoubleClick(object sender, EventArgs e) {
-            var data = lbxFavourites.SelectedItem;
-            if (data == null) return;
+        private async void SetVisitors() {
+            loadedVisitors = await Repo.Instance.FetchVisitors(currentGender, currentDatasource, currentChampionship);
 
-            int shirtNum = int.Parse(data.ToString().Split('(')[1].Split(')')[0]);
-            FillPlayerViewer(shirtNum, favoritePlayers);
-        }
+            flpVisitors.Controls.Clear();
+            loadedVisitors.ForEach(v => {
+                VisitorViewrControl vvc = new VisitorViewrControl();
 
-        private void lbxOthers_DoubleClick(object sender, EventArgs e) {
-            var data = lbxOthers.SelectedItem;
-            if (data == null) return;
+                vvc.SetText(v.Location, v.Attendance.ToString(), v.HomeTeamCountry, v.AwayTeamCountry);
 
-            int shirtNum = int.Parse(data.ToString().Split('(')[1].Split(')')[0]);
-            FillPlayerViewer(shirtNum, otherPlayers);
+                flpVisitors.Controls.Add(vvc);
+            });
         }
 
         private void FillPlayerViewer(int shirtNum, List<Player> players) {
@@ -111,10 +214,10 @@ namespace MainForm {
 
             playerViewerControl1.FillView(selectedPlayer);
 
-            var imgPath = Repo.instance.GetImagePath(selectedPlayer);
+            var imgPath = Repo.Instance.GetImagePath(selectedPlayer);
 
-            if (Repo.instance.GetImagePath(selectedPlayer).Item2) {
-                playerViewerControl1.SetPicture(Repo.instance.GetImagePath(selectedPlayer).Item1);
+            if (Repo.Instance.GetImagePath(selectedPlayer).Item2) {
+                playerViewerControl1.SetPicture(Repo.Instance.GetImagePath(selectedPlayer).Item1);
             }
             else {
                 playerViewerControl1.SetPicture(Properties.Resources.no_image_2);
@@ -129,10 +232,13 @@ namespace MainForm {
 
             try {
                 string path = playerViewerControl1.LoadPictureFromFile();
-                Repo.instance.SaveImage(path, selectedPlayer);
+                if (path == string.Empty) return;
+
+                FillEventPanel(true, Image.FromFile(path), selectedPlayer);
+                Repo.Instance.SaveImage(path, selectedPlayer);
             }
             catch (Exception) {
-                MessageBox.Show("Image load or save failed", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Image save failed", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -146,18 +252,34 @@ namespace MainForm {
             }
         }
 
+        private void SaveFavourites() {
+            string[] favPlayerNames = new string[favoritePlayers.Count];
+            if (favPlayerNames.Length == 0) {
+                Repo.Instance.SaveUserSettings(currentChampionship, true);
+            }
+            for (int i = 0; i < favPlayerNames.Length; i++) {
+                favPlayerNames[i] = favoritePlayers.ToArray()[i].Name;
+            }
+            Repo.Instance.SaveUserSettings(currentChampionship, false, favPlayerNames);
+        }
+
         private void lbxAllPlayers_DoubleClick(object sender, EventArgs e) {
+            if (favoritePlayers.Count >= 3) return;
+
             var data = lbxAllPlayers.SelectedItem;
             if (data == null) return;
 
             int shirtNum = int.Parse(data.ToString().Split('(')[1].Split(')')[0]);
-            var movedPlayer = loadedPlayers.Find(p => p.ShirtNumber == shirtNum);
+            var movedPlayer = otherPlayers.Find(p => p.ShirtNumber == shirtNum);
 
-            if (favoritePlayers.Contains(movedPlayer)) return;
+            if (movedPlayer == null) return;
 
             favoritePlayers.Add(movedPlayer);
-            otherPlayers.Remove(movedPlayer);
+            if (otherPlayers.Remove(movedPlayer)) {
+                var a = 1;
+            }
 
+            SaveFavourites();
 
             SetDisplayLists();
         }
@@ -177,8 +299,8 @@ namespace MainForm {
         }
 
         private async void SetRankEvents() {
-            var data = await Repo.instance.FetchEvents(currentGender, currentDatasource, GetFilter());
-            var dataFilterd = data.FindAll(p => (p.TypeOfEvent == "yellow-card") || (p.TypeOfEvent == "goal"));
+            loadedGameEvents = await Repo.Instance.FetchEvents(currentGender, currentDatasource, currentChampionship);
+            var dataFilterd = loadedGameEvents.FindAll(p => (p.TypeOfEvent == "yellow-card") || (p.TypeOfEvent == "goal"));
 
             var dataSorted = dataFilterd.GroupBy(e => e.PlayerName).Select(g => new {
                 Type = g.Key,
@@ -186,19 +308,58 @@ namespace MainForm {
                 YellowCards = g.Count(g => g.TypeOfEvent == "yellow-card")
             }).ToList();
 
-
-
             flpEvents.Controls.Clear();
             dataSorted.ForEach(g => {
                 PlayerViewerSmallControll pv = new PlayerViewerSmallControll();
                 pv.SetData(g.Type, g.Goals, g.YellowCards);
+                pv.Name = g.Type;
+
+                (string path, bool did) = Repo.Instance.GetImagePath(loadedPlayers.Find(p => p.Name == g.Type));
+
+                if (did) pv.SetImage(Image.FromFile(path));
+                else pv.SetImage(Properties.Resources.no_image_2);
+
                 flpEvents.Controls.Add(pv);
             });
+
+            FillEventPanel(false);
+        }
+
+        private bool FillEventPanel(bool overload, Image? image = null, Player? p = null) {
+            if (!overload) {
+                foreach (PlayerViewerSmallControll pcvs in flpEvents.Controls) {
+                    (string path, bool did) = Repo.Instance.GetImagePath(loadedPlayers.Find(p => p.Name == pcvs.GetName()));
+                    if (did) {
+                        pcvs.SetImage(Image.FromFile(path));
+                    }
+                    else {
+                        pcvs.SetImage(Properties.Resources.no_image_2);
+                    }
+                }
+                return true;
+            }
+            else if (p != null && image != null) {
+                try {
+                    var data = (PlayerViewerSmallControll)flpEvents.Controls.Find(p.Name, false)[0];
+                    data.SetImage(image);
+                }
+                catch (Exception) {
+
+                }
+                return true;
+            }
+            return false;
         }
 
         private void lbxOthers_MouseDown(object sender, MouseEventArgs e) {
             lbxFavourites.AllowDrop = !(lbxFavourites.Items.Count >= 3);
             if (lbxOthers.SelectedItems.Count >= 1) {
+
+                var data = lbxOthers.SelectedItem;
+                if (data == null) return;
+
+                int shirtNum = int.Parse(data.ToString().Split('(')[1].Split(')')[0]);
+                FillPlayerViewer(shirtNum, otherPlayers);
 
                 if (lbxOthers.SelectedItem != null) {
                     lbxOthers.DoDragDrop(lbxOthers.SelectedItem.ToString(), DragDropEffects.Copy);
@@ -219,16 +380,24 @@ namespace MainForm {
                 lbxFavourites.Items.Add(movedItem);
                 lbxOthers.Items.Remove(movedItem);
 
-                var movedPlayer = loadedPlayers.Find(p => p.ShirtNumber == int.Parse(movedItem.ToString().Split('(')[1].Split(')')[0]));
+                var movedPlayer = otherPlayers.Find(p => p.ShirtNumber == int.Parse(movedItem.ToString().Split('(')[1].Split(')')[0]));
                 movedPlayer.IsFavourite = true;
 
                 favoritePlayers.Add(movedPlayer);
                 otherPlayers.Remove(movedPlayer);
+
+                SaveFavourites();
             }
         }
 
         private void lbxFavourites_MouseDown(object sender, MouseEventArgs e) {
             if (lbxFavourites.SelectedItems.Count >= 1) {
+
+                var data = lbxFavourites.SelectedItem;
+                if (data == null) return;
+
+                int shirtNum = int.Parse(data.ToString().Split('(')[1].Split(')')[0]);
+                FillPlayerViewer(shirtNum, favoritePlayers);
 
                 if (lbxFavourites.SelectedItem != null) {
                     lbxFavourites.DoDragDrop(lbxFavourites.SelectedItem.ToString(), DragDropEffects.Copy);
@@ -249,20 +418,14 @@ namespace MainForm {
                 lbxOthers.Items.Add(movedItem);
                 lbxFavourites.Items.Remove(movedItem);
 
-                var movedPlayer = loadedPlayers.Find(p => p.ShirtNumber == int.Parse(movedItem.ToString().Split('(')[1].Split(')')[0]));
+                var movedPlayer = favoritePlayers.Find(p => p.ShirtNumber == int.Parse(movedItem.ToString().Split('(')[1].Split(')')[0]));
                 movedPlayer.IsFavourite = false;
 
                 otherPlayers.Add(movedPlayer);
                 favoritePlayers.Remove(movedPlayer);
+
+                SaveFavourites();
             }
-        }
-
-        private void lbxFavourites_SelectedIndexChanged(object sender, EventArgs e) {
-
-        }
-
-        private void lbxOthers_SelectedIndexChanged(object sender, EventArgs e) {
-
         }
 
         private void lbxOthers_Click(object sender, EventArgs e) {
@@ -279,6 +442,23 @@ namespace MainForm {
 
             int shirtNum = int.Parse(data.ToString().Split('(')[1].Split(')')[0]);
             FillPlayerViewer(shirtNum, favoritePlayers);
+        }
+
+        private void btnPrint_Click(object sender, EventArgs e) {
+            printPreviewDialog1.Document = printDocument1;
+            if (printPreviewDialog1.ShowDialog() == DialogResult.OK) {
+                printDocument1.Print();
+            }
+
+
+        }
+
+        private void printDocument1_PrintPage(object sender, PrintPageEventArgs e) {
+
+        }
+
+        private void flpEvents_Click(object sender, EventArgs e) {
+            //var a = flpEvents.Controls.
         }
     }
 }

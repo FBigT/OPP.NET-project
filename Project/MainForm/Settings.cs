@@ -18,7 +18,7 @@ namespace MainForm {
         }
 
         private void btnConfirm_Click(object sender, EventArgs e) {
-            Repo.instance.SaveAppSettings(selectedLanguage, selectedGender, selectedDatasource);
+            Repo.Instance.SaveAppSettings(selectedLanguage, selectedGender, selectedDatasource);
             Close();
         }
 
@@ -28,9 +28,9 @@ namespace MainForm {
             cbxLanguage.DataSource = Enum.GetValues(typeof(Language));
             cbxLanguage.SelectedIndex = 0;
 
-            if (Repo.instance.AppSettingExists()) {
+            if (Repo.Instance.AppSettingExists()) {
                 try {
-                    AppSettingsData ads = Repo.instance.GetAppSettings();
+                    AppSettingsData ads = Repo.Instance.GetAppSettings();
                     selectedLanguage = ads.language;
                     selectedGender = ads.gender;
                     selectedDatasource = ads.source;

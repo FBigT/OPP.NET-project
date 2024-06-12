@@ -1,6 +1,7 @@
 ﻿using FifaLib.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Data;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
@@ -26,9 +27,12 @@ namespace FifaLib {
         private static readonly string appSettingsFile = "appSettings.txt";
         private static readonly string userSetingsFile = "userSettings.txt";
 
-        public static readonly Repo instance = new Repo();
+        private static readonly Repo instance = new Repo();
 
         public static Repo Instance { get { return instance; } }
+
+        //public delegate void MatcheChangeEventHandler(object sender, EventArgs args); 
+        //public event MatcheChangeEventHandler OnMatcheChange;
 
         static Repo() {
             _clinet = new HttpClient();
@@ -109,6 +113,28 @@ namespace FifaLib {
                 jstring = await ExtractDataSerialized(source, sb.ToString());
             }
             return JsonConvert.DeserializeObject<List<TeamResults>>(jstring);
+        }
+
+        public async Task<List<Visitor>> FetchVisitors(Gender gender, DataSource source, string filter) {
+            var jstring = await FetchMatchesFiltered(gender, source, filter);
+
+            _matches.Clear();
+            _matches = JArray.Parse(jstring);
+
+            try {
+
+                JArray jVisitors = new JArray();
+                List<Visitor> visitors = new List<Visitor>();
+
+                foreach (JObject game in _matches) {
+                    visitors.Add(game.ToObject<Visitor>());
+                }
+                return visitors;
+            }
+            catch (Exception e) {
+                Console.WriteLine($"Visitor read failed from source: \"{source}\"\n" + e.ToString());
+                throw new IOException();
+            }
         }
 
         private async Task<string> FetchMatchesFiltered(Gender gender, DataSource source, string filter) {
@@ -193,9 +219,53 @@ namespace FifaLib {
             }
         }
 
-        public void SaveUserSettings() {
+        public bool SaveUserSettings(string championship, bool overwrite, params string[] favs) {
+            try {
+                string[] data;
 
+                if (!overwrite) {
+                    data = new string[1 + favs.Count()];
+                    favs.CopyTo(data, 1);
+                }
+                else {
+                    UserSettingsData usd = GetUserSettings();
+                    string[]? loadeldData = usd.faves;
+                    data = new string[1 + loadeldData.Count()];
+                    loadeldData.CopyTo(data, 1);
+                }
+
+                data[0] = championship;
+
+                File.WriteAllText(Path.Combine(appSettingsPath, userSetingsFile), "");
+
+                File.WriteAllLines(Path.Combine(appSettingsPath, userSetingsFile), data);
+                return true;
+            }
+            catch (Exception e) {
+                Console.WriteLine("Data save failed\n" + e.Message);
+                return false;
+            }
         }
+
+        public UserSettingsData GetUserSettings() {
+
+            try {
+                string[] lines = File.ReadAllLines(Path.Combine(appSettingsPath, userSetingsFile));
+
+                UserSettingsData usd = new UserSettingsData();
+                usd.champoinship = lines[0];
+                var data = lines.Skip(1);
+                usd.faves = data.ToArray();
+
+                return usd;
+            }
+            catch (Exception) {
+                Console.WriteLine("Settings are invalid or corupted");
+                throw new IOException();
+            }
+        }
+
+        public void DestroyUserSettings() => File.Delete(Path.Combine(appSettingsPath, userSetingsFile));
 
         public void DestroySettings() => File.Delete(Path.Combine(appSettingsPath, appSettingsFile));
 
@@ -223,6 +293,10 @@ namespace FifaLib {
 
         public bool AppSettingExists() {
             return File.Exists(Path.Combine(appSettingsPath, appSettingsFile));
+        }
+
+        public bool UserSettingExists() {
+            return File.Exists(Path.Combine(appSettingsPath, userSetingsFile));
         }
     }
 }

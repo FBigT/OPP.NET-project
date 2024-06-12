@@ -31,4 +31,14 @@ namespace FifaLib.Models {
             this.gender = gender;
         }
     }
+
+    public struct UserSettingsData {
+        public string? champoinship;
+        public string[]? faves;
+
+        public UserSettingsData(string? champoinship, string[]? faves) {
+            this.champoinship = champoinship;
+            this.faves = faves;
+        }
+    }
 }

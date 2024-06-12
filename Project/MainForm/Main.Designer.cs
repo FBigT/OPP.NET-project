@@ -24,6 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             btnAddImage = new Button();
             cbxRepresentation = new ComboBox();
             lbxOthers = new ListBox();
@@ -38,12 +39,15 @@
             lbxAllPlayers = new ListBox();
             flpEvents = new FlowLayoutPanel();
             gbFavourites = new GroupBox();
+            btnPrint = new Button();
             tableLayoutPanel1 = new TableLayoutPanel();
             lblVisitors = new Label();
             lblPlayerRankings = new Label();
-            lbxVisitors = new ListBox();
+            flpVisitors = new FlowLayoutPanel();
             gbRankigs = new GroupBox();
             ttAllPlayers = new ToolTip(components);
+            printDocument1 = new System.Drawing.Printing.PrintDocument();
+            printPreviewDialog1 = new PrintPreviewDialog();
             menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)playerBindingSource).BeginInit();
             gbRepresentation.SuspendLayout();
@@ -54,7 +58,7 @@
             // 
             // btnAddImage
             // 
-            btnAddImage.Location = new Point(505, 305);
+            btnAddImage.Location = new Point(505, 247);
             btnAddImage.Name = "btnAddImage";
             btnAddImage.Size = new Size(163, 52);
             btnAddImage.TabIndex = 12;
@@ -82,14 +86,12 @@
             lbxOthers.ItemHeight = 20;
             lbxOthers.Location = new Point(353, 414);
             lbxOthers.Name = "lbxOthers";
-            lbxOthers.Size = new Size(315, 424);
+            lbxOthers.Size = new Size(315, 584);
             lbxOthers.Sorted = true;
             lbxOthers.TabIndex = 11;
             lbxOthers.Click += lbxOthers_Click;
-            lbxOthers.SelectedIndexChanged += lbxOthers_SelectedIndexChanged;
             lbxOthers.DragDrop += lbxOthers_DragDrop;
             lbxOthers.DragEnter += lbxOthers_DragEnter;
-            lbxOthers.DoubleClick += lbxOthers_DoubleClick;
             lbxOthers.MouseDown += lbxOthers_MouseDown;
             // 
             // playerViewerControl1
@@ -147,14 +149,12 @@
             lbxFavourites.ItemHeight = 20;
             lbxFavourites.Location = new Point(6, 414);
             lbxFavourites.Name = "lbxFavourites";
-            lbxFavourites.Size = new Size(315, 424);
+            lbxFavourites.Size = new Size(315, 584);
             lbxFavourites.Sorted = true;
             lbxFavourites.TabIndex = 0;
             lbxFavourites.Click += lbxFavourites_Click;
-            lbxFavourites.SelectedIndexChanged += lbxFavourites_SelectedIndexChanged;
             lbxFavourites.DragDrop += lbxFavourites_DragDrop;
             lbxFavourites.DragEnter += lbxFavourites_DragEnter;
-            lbxFavourites.DoubleClick += lbxFavourites_DoubleClick;
             lbxFavourites.MouseDown += lbxFavourites_MouseDown;
             // 
             // gbRepresentation
@@ -164,7 +164,7 @@
             gbRepresentation.Controls.Add(cbxRepresentation);
             gbRepresentation.Location = new Point(12, 31);
             gbRepresentation.Name = "gbRepresentation";
-            gbRepresentation.Size = new Size(334, 848);
+            gbRepresentation.Size = new Size(334, 1009);
             gbRepresentation.TabIndex = 13;
             gbRepresentation.TabStop = false;
             gbRepresentation.Text = "Favourite Representation";
@@ -176,7 +176,8 @@
             lbxAllPlayers.ItemHeight = 20;
             lbxAllPlayers.Location = new Point(5, 54);
             lbxAllPlayers.Name = "lbxAllPlayers";
-            lbxAllPlayers.Size = new Size(323, 784);
+            lbxAllPlayers.Size = new Size(323, 944);
+            lbxAllPlayers.Sorted = true;
             lbxAllPlayers.TabIndex = 8;
             ttAllPlayers.SetToolTip(lbxAllPlayers, "To move players to favourites double click the desired player.");
             lbxAllPlayers.DoubleClick += lbxAllPlayers_DoubleClick;
@@ -187,12 +188,14 @@
             flpEvents.Dock = DockStyle.Fill;
             flpEvents.Location = new Point(5, 27);
             flpEvents.Name = "flpEvents";
-            flpEvents.Size = new Size(390, 790);
+            flpEvents.Size = new Size(390, 951);
             flpEvents.TabIndex = 16;
+            flpEvents.Click += flpEvents_Click;
             // 
             // gbFavourites
             // 
             gbFavourites.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            gbFavourites.Controls.Add(btnPrint);
             gbFavourites.Controls.Add(btnAddImage);
             gbFavourites.Controls.Add(lbxOthers);
             gbFavourites.Controls.Add(playerViewerControl1);
@@ -201,10 +204,20 @@
             gbFavourites.Controls.Add(label2);
             gbFavourites.Location = new Point(352, 31);
             gbFavourites.Name = "gbFavourites";
-            gbFavourites.Size = new Size(674, 848);
+            gbFavourites.Size = new Size(674, 1009);
             gbFavourites.TabIndex = 17;
             gbFavourites.TabStop = false;
             gbFavourites.Text = "Favourite Players";
+            // 
+            // btnPrint
+            // 
+            btnPrint.Location = new Point(505, 305);
+            btnPrint.Name = "btnPrint";
+            btnPrint.Size = new Size(163, 52);
+            btnPrint.TabIndex = 13;
+            btnPrint.Text = "Print file";
+            btnPrint.UseVisualStyleBackColor = true;
+            btnPrint.Click += btnPrint_Click;
             // 
             // tableLayoutPanel1
             // 
@@ -215,14 +228,14 @@
             tableLayoutPanel1.Controls.Add(lblVisitors, 1, 0);
             tableLayoutPanel1.Controls.Add(flpEvents, 0, 1);
             tableLayoutPanel1.Controls.Add(lblPlayerRankings, 0, 0);
-            tableLayoutPanel1.Controls.Add(lbxVisitors, 1, 1);
+            tableLayoutPanel1.Controls.Add(flpVisitors, 1, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(3, 23);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(798, 822);
+            tableLayoutPanel1.Size = new Size(798, 983);
             tableLayoutPanel1.TabIndex = 18;
             // 
             // lblVisitors
@@ -249,16 +262,14 @@
             lblPlayerRankings.Text = "Player Rankings";
             lblPlayerRankings.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // lbxVisitors
+            // flpVisitors
             // 
-            lbxVisitors.BackColor = SystemColors.Window;
-            lbxVisitors.Dock = DockStyle.Fill;
-            lbxVisitors.FormattingEnabled = true;
-            lbxVisitors.ItemHeight = 20;
-            lbxVisitors.Location = new Point(403, 27);
-            lbxVisitors.Name = "lbxVisitors";
-            lbxVisitors.Size = new Size(390, 790);
-            lbxVisitors.TabIndex = 17;
+            flpVisitors.AutoScroll = true;
+            flpVisitors.Dock = DockStyle.Fill;
+            flpVisitors.Location = new Point(403, 27);
+            flpVisitors.Name = "flpVisitors";
+            flpVisitors.Size = new Size(390, 951);
+            flpVisitors.TabIndex = 17;
             // 
             // gbRankigs
             // 
@@ -266,7 +277,7 @@
             gbRankigs.Controls.Add(tableLayoutPanel1);
             gbRankigs.Location = new Point(1032, 31);
             gbRankigs.Name = "gbRankigs";
-            gbRankigs.Size = new Size(804, 848);
+            gbRankigs.Size = new Size(804, 1009);
             gbRankigs.TabIndex = 19;
             gbRankigs.TabStop = false;
             gbRankigs.Text = "Rankings";
@@ -276,11 +287,26 @@
             ttAllPlayers.ToolTipIcon = ToolTipIcon.Info;
             ttAllPlayers.ToolTipTitle = "Player Managment";
             // 
+            // printDocument1
+            // 
+            printDocument1.PrintPage += printDocument1_PrintPage;
+            // 
+            // printPreviewDialog1
+            // 
+            printPreviewDialog1.AutoScrollMargin = new Size(0, 0);
+            printPreviewDialog1.AutoScrollMinSize = new Size(0, 0);
+            printPreviewDialog1.ClientSize = new Size(400, 300);
+            printPreviewDialog1.Document = printDocument1;
+            printPreviewDialog1.Enabled = true;
+            printPreviewDialog1.Icon = (Icon)resources.GetObject("printPreviewDialog1.Icon");
+            printPreviewDialog1.Name = "printPreviewDialog1";
+            printPreviewDialog1.Visible = false;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1848, 891);
+            ClientSize = new Size(1848, 1052);
             Controls.Add(gbRankigs);
             Controls.Add(gbFavourites);
             Controls.Add(gbRepresentation);
@@ -323,8 +349,11 @@
         private Label lblVisitors;
         private GroupBox gbRankigs;
         private Label lblPlayerRankings;
-        private ListBox lbxVisitors;
         private ListBox lbxAllPlayers;
         private ToolTip ttAllPlayers;
+        private FlowLayoutPanel flpVisitors;
+        private Button btnPrint;
+        private System.Drawing.Printing.PrintDocument printDocument1;
+        private PrintPreviewDialog printPreviewDialog1;
     }
 }

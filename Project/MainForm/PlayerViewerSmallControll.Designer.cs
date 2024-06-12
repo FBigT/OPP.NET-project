@@ -35,18 +35,18 @@
             // 
             // pbxMain
             // 
+            pbxMain.BorderStyle = BorderStyle.FixedSingle;
             pbxMain.Dock = DockStyle.Fill;
             pbxMain.Image = Properties.Resources.no_image_2;
-            pbxMain.Location = new Point(252, 4);
+            pbxMain.Location = new Point(252, 3);
             pbxMain.Name = "pbxMain";
-            pbxMain.Size = new Size(100, 102);
+            pbxMain.Size = new Size(101, 104);
             pbxMain.SizeMode = PictureBoxSizeMode.StretchImage;
             pbxMain.TabIndex = 0;
             pbxMain.TabStop = false;
             // 
             // tlpMain
             // 
-            tlpMain.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
             tlpMain.ColumnCount = 2;
             tlpMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
             tlpMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
@@ -68,21 +68,21 @@
             tlpData.Controls.Add(lblData, 0, 1);
             tlpData.Controls.Add(lblPlayer, 0, 0);
             tlpData.Dock = DockStyle.Fill;
-            tlpData.Location = new Point(4, 4);
+            tlpData.Location = new Point(3, 3);
             tlpData.Name = "tlpData";
             tlpData.RowCount = 2;
             tlpData.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tlpData.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tlpData.Size = new Size(241, 102);
+            tlpData.Size = new Size(243, 104);
             tlpData.TabIndex = 1;
             // 
             // lblData
             // 
             lblData.AutoSize = true;
             lblData.Dock = DockStyle.Fill;
-            lblData.Location = new Point(4, 51);
+            lblData.Location = new Point(4, 52);
             lblData.Name = "lblData";
-            lblData.Size = new Size(233, 50);
+            lblData.Size = new Size(235, 51);
             lblData.TabIndex = 1;
             lblData.Text = "data";
             lblData.TextAlign = ContentAlignment.MiddleLeft;
@@ -93,7 +93,7 @@
             lblPlayer.Dock = DockStyle.Fill;
             lblPlayer.Location = new Point(4, 1);
             lblPlayer.Name = "lblPlayer";
-            lblPlayer.Size = new Size(233, 49);
+            lblPlayer.Size = new Size(235, 50);
             lblPlayer.TabIndex = 0;
             lblPlayer.Text = "player";
             lblPlayer.TextAlign = ContentAlignment.MiddleLeft;

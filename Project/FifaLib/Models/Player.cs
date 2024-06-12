@@ -17,9 +17,6 @@ namespace FifaLib.Models {
         [JsonIgnore]
         public bool IsFavourite { get; set; }
 
-        [JsonIgnore]
-        public string? PicturePath { get; private set; }
-
         public override string ToString() {
             return $"Name:{Name} IsCaptain:{(IsCaptain ? "true" : "false")} ShirtNumber:{ShirtNumber} Position:{Position}";
         }

@@ -68,5 +68,7 @@ namespace FifaLib.Models {
         }
 
         public override string? ToString() => $"id = {Id} country = {Country}";
+
+        public string ToDisplay() => $"{Country}({FifaCode})";
     }
 }
