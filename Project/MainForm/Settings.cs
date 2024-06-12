@@ -7,7 +7,6 @@ namespace MainForm {
         private Gender selectedGender = Gender.Male;
         private Language selectedLanguage = Language.English;
         private DataSource selectedDatasource = DataSource.API;
-        private readonly string appData = "appSettings.txt";
 
         public Settings() {
             InitializeComponent();
@@ -19,6 +18,7 @@ namespace MainForm {
 
         private void btnConfirm_Click(object sender, EventArgs e) {
             Repo.Instance.SaveAppSettings(selectedLanguage, selectedGender, selectedDatasource);
+            this.DialogResult = DialogResult.OK;
             Close();
         }
 
@@ -52,10 +52,31 @@ namespace MainForm {
                         rbFile.Checked = true;
                         rbAPI.Checked = !rbFile.Checked;
                     }
+
+                    SetLocalization();
                 }
                 catch (Exception) {
                     MessageBox.Show("An error accured while reading appSettings.txt", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+        }
+        private void SetLocalization() {
+            if (selectedLanguage == Language.Croatian) {
+                Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("hr");
+            }
+            else {
+                Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-GB");
+            }
+            Controls.Clear();
+            InitializeComponent();
+
+            cbxLanguage.DataSource = Enum.GetValues(typeof(Language));
+
+            if (selectedLanguage == Language.Croatian) {
+                cbxLanguage.SelectedIndex = 1;
+            }
+            else {
+                cbxLanguage.SelectedIndex = 0;
             }
         }
 

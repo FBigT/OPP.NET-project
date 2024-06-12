@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Data;
+using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
@@ -31,6 +32,9 @@ namespace FifaLib {
 
         public static Repo Instance { get { return instance; } }
 
+        private string? dataFilter;
+        private string? jData;
+
         //public delegate void MatcheChangeEventHandler(object sender, EventArgs args); 
         //public event MatcheChangeEventHandler OnMatcheChange;
 
@@ -52,11 +56,16 @@ namespace FifaLib {
             }
         }
 
+        public void SetDataFilter(string? filter) => dataFilter = filter;
+
         public async Task<List<GameEvent>> FetchEvents(Gender gender, DataSource source, string filter) {
-            var jstring = await FetchMatchesFiltered(gender, source, filter);
+            if (dataFilter != filter || jData == null) {
+                jData = await FetchMatchesFiltered(gender, source, filter);
+                dataFilter = filter;
+            }
 
             _matches.Clear();
-            _matches = JArray.Parse(jstring);
+            _matches = JArray.Parse(jData);
 
             try {
 
@@ -79,10 +88,13 @@ namespace FifaLib {
         }
 
         public async Task<List<Player>> FetchPlayers(Gender gender, DataSource source, string filter) {
-            var jstring = await FetchMatchesFiltered(gender, source, filter);
+            if (dataFilter != filter || jData == null) {
+                jData = await FetchMatchesFiltered(gender, source, filter);
+                dataFilter = filter;
+            }
 
             _matches.Clear();
-            _matches = JArray.Parse(jstring);
+            _matches = JArray.Parse(jData);
 
             try {
                 JArray jPlayers = new JArray();
@@ -116,10 +128,13 @@ namespace FifaLib {
         }
 
         public async Task<List<Visitor>> FetchVisitors(Gender gender, DataSource source, string filter) {
-            var jstring = await FetchMatchesFiltered(gender, source, filter);
+            if (dataFilter != filter || jData == null) {
+                jData = await FetchMatchesFiltered(gender, source, filter);
+                dataFilter = filter;
+            }
 
             _matches.Clear();
-            _matches = JArray.Parse(jstring);
+            _matches = JArray.Parse(jData);
 
             try {
 
@@ -269,11 +284,12 @@ namespace FifaLib {
 
         public void DestroySettings() => File.Delete(Path.Combine(appSettingsPath, appSettingsFile));
 
-        public void SaveImage(string path, Player player) {
+        public string SaveImage(string path, Player player) {
             string extension = Path.GetExtension(path);
             string copyPath = Path.Combine(playerImagePath, player.Name + extension);
             try {
                 File.Copy(path, copyPath, true);
+                return copyPath;
             }
             catch (Exception) {
                 throw new IOException();

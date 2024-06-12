@@ -1,5 +1,6 @@
 using FifaLib;
 using FifaLib.Models;
+using iTextSharp.text.pdf;
 using MainForm.Properties;
 using System.Drawing.Printing;
 using System.IO;
@@ -29,6 +30,7 @@ namespace MainForm {
 
         private string? currentChampionship;
 
+        private bool loading = false;
         private int open = 0;
 
         public Main() {
@@ -59,10 +61,11 @@ namespace MainForm {
                 }
             }
             else {
-               loadedTeams.Sort((x, y) => x.FifaCode.CompareTo(y.FifaCode));
-               currentChampionship = loadedTeams.ToArray()[0].FifaCode;
+                loadedTeams.Sort((x, y) => x.FifaCode.CompareTo(y.FifaCode));
+                currentChampionship = loadedTeams.ToArray()[0].FifaCode;
             }
 
+            Repo.Instance.SetDataFilter(currentChampionship);
             SetRepresentationCbx();
 
             loadedVisitors = await Repo.Instance.FetchVisitors(currentGender, currentDatasource, currentChampionship);
@@ -77,6 +80,17 @@ namespace MainForm {
             LoadFavs();
         }
 
+        private void SetLocalization() {
+            if (currentLlanguage == Language.Croatian) {
+                Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("hr");
+            }
+            else {
+                Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-GB");
+            }
+            Controls.Clear();
+            InitializeComponent();
+        }
+
         private void ValidateForm() {
             if (!Repo.Instance.AppSettingExists()) {
                 Settings settings = new Settings();
@@ -89,6 +103,8 @@ namespace MainForm {
                 currentDatasource = ads.source;
 
                 gbRepresentation.Text = $"{title} ({currentGender})";
+
+                SetLocalization();
             }
             catch (Exception) {
                 MessageBox.Show("Settings are invalid or corupted.\nSettings must be set again.", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -143,18 +159,20 @@ namespace MainForm {
             }
         }
 
-        private async void SetPlayerSelectionList() {
+        private async void SetPlayerSelectionList(bool skip) {
             lbxAllPlayers.Items.Clear();
 
-            loadedPlayers = await Repo.Instance.FetchPlayers(currentGender, currentDatasource, currentChampionship);
+            if (!skip || open == 0) {
+                loadedPlayers = await Repo.Instance.FetchPlayers(currentGender, currentDatasource, currentChampionship);
+                favoritePlayers.Clear();
+                otherPlayers = new List<Player>(loadedPlayers);
+            }
 
             lbxFavourites.Items.Clear();
-            favoritePlayers.Clear();
-
             loadedPlayers.ForEach(player => {
                 lbxAllPlayers.Items.Add(player.ToDisplay());
             });
-            otherPlayers = new List<Player>(loadedPlayers);
+
 
             lbxOthers.Items.Clear();
             otherPlayers.ForEach(p => {
@@ -175,25 +193,25 @@ namespace MainForm {
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e) {
             Settings settingsForm = new Settings();
-            settingsForm.ShowDialog();
-            ValidateForm();
-            SetRepresentationCbx();
+            if (settingsForm.ShowDialog() == DialogResult.OK) {
+                loading = true;
+                ValidateForm();
+                SetRepresentationCbx();
+                SetDisplayLists();
+                if (selectedPlayer != null)
+                    FillPlayerViewer(selectedPlayer);
+                loading = true;
+            }
         }
 
 
         private void cbxRepresentation_SelectedIndexChanged(object sender, EventArgs e) {
             currentChampionship = SetFilter();
-
-            SetPlayerSelectionList();
+            SetPlayerSelectionList(loading);
             SetRankEvents();
             SetVisitors();
 
-            if (open >= 1) {
-                SaveFavourites();
-            }
-            else {
-                open++;
-            }
+            if (open == 0) open++;
         }
 
         private async void SetVisitors() {
@@ -224,6 +242,19 @@ namespace MainForm {
             }
         }
 
+        private void FillPlayerViewer(Player selected) {
+            playerViewerControl1.FillView(selected);
+
+            var imgPath = Repo.Instance.GetImagePath(selected);
+
+            if (Repo.Instance.GetImagePath(selected).Item2) {
+                playerViewerControl1.SetPicture(Repo.Instance.GetImagePath(selected).Item1);
+            }
+            else {
+                playerViewerControl1.SetPicture(Properties.Resources.no_image_2);
+            }
+        }
+
         private void btnAddImage_Click(object sender, EventArgs e) {
             if (selectedPlayer == null) {
                 MessageBox.Show("No player selected", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -234,8 +265,20 @@ namespace MainForm {
                 string path = playerViewerControl1.LoadPictureFromFile();
                 if (path == string.Empty) return;
 
-                FillEventPanel(true, Image.FromFile(path), selectedPlayer);
-                Repo.Instance.SaveImage(path, selectedPlayer);
+                //if (playerViewerControl1.GetImage() != Properties.Resources.no_image_2) {
+                //    playerViewerControl1.SetPicture(Properties.Resources.no_image_2);
+                //    FillEventPanel(true, Properties.Resources.no_image_2, selectedPlayer);
+                //}
+
+                try {
+                    string savedPath = Repo.Instance.SaveImage(path, selectedPlayer);
+
+                    playerViewerControl1.SetPicture(savedPath);
+                    FillEventPanel(true, Image.FromFile(savedPath), selectedPlayer);
+                }
+                catch (Exception) {
+                    MessageBox.Show("Cant set another image.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             catch (Exception) {
                 MessageBox.Show("Image save failed", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -328,7 +371,8 @@ namespace MainForm {
         private bool FillEventPanel(bool overload, Image? image = null, Player? p = null) {
             if (!overload) {
                 foreach (PlayerViewerSmallControll pcvs in flpEvents.Controls) {
-                    (string path, bool did) = Repo.Instance.GetImagePath(loadedPlayers.Find(p => p.Name == pcvs.GetName()));
+                    Player? found = loadedPlayers.Find(p => p.Name == pcvs.GetName());
+                    (string? path, bool did) = Repo.Instance.GetImagePath(found);
                     if (did) {
                         pcvs.SetImage(Image.FromFile(path));
                     }
@@ -344,7 +388,7 @@ namespace MainForm {
                     data.SetImage(image);
                 }
                 catch (Exception) {
-
+                    return false;
                 }
                 return true;
             }
@@ -445,20 +489,37 @@ namespace MainForm {
         }
 
         private void btnPrint_Click(object sender, EventArgs e) {
-            printPreviewDialog1.Document = printDocument1;
-            if (printPreviewDialog1.ShowDialog() == DialogResult.OK) {
-                printDocument1.Print();
+            if (printDialog.ShowDialog() == DialogResult.OK) {
+                try {
+                    printDocument.Print();
+                }
+                catch (Exception) {
+                    MessageBox.Show("Print failed", "Print", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-
-
         }
 
-        private void printDocument1_PrintPage(object sender, PrintPageEventArgs e) {
-
+        private void btnMargins_Click(object sender, EventArgs e) {
+            pageSetupDialog.ShowDialog();
         }
 
-        private void flpEvents_Click(object sender, EventArgs e) {
-            //var a = flpEvents.Controls.
+        private void btnPreview_Click(object sender, EventArgs e) {
+            printPreviewDialog.ShowDialog(this);
+        }
+
+        private void printDocument_PrintPage(object sender, PrintPageEventArgs e) {
+            var x = e.MarginBounds.Left;
+            var y = e.MarginBounds.Top;
+            Bitmap bmap = new Bitmap(gbRankigs.Width, gbRankigs.Height);
+
+            gbRankigs.DrawToBitmap(bmap, new Rectangle {
+                X = 0,
+                Y = 0,
+                Width = bmap.Width,
+                Height = bmap.Height
+            });
+
+            e.Graphics?.DrawImage(bmap, x, y);
         }
     }
 }

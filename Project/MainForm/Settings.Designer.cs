@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             btnConfirm = new Button();
             btnCancel = new Button();
             cbxLanguage = new ComboBox();
@@ -39,21 +40,15 @@
             // 
             // btnConfirm
             // 
-            btnConfirm.Location = new Point(12, 190);
+            resources.ApplyResources(btnConfirm, "btnConfirm");
             btnConfirm.Name = "btnConfirm";
-            btnConfirm.Size = new Size(149, 40);
-            btnConfirm.TabIndex = 0;
-            btnConfirm.Text = "Confirm";
             btnConfirm.UseVisualStyleBackColor = true;
             btnConfirm.Click += btnConfirm_Click;
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(170, 190);
+            resources.ApplyResources(btnCancel, "btnCancel");
             btnCancel.Name = "btnCancel";
-            btnCancel.Size = new Size(149, 40);
-            btnCancel.TabIndex = 1;
-            btnCancel.Text = "Cancel";
             btnCancel.UseVisualStyleBackColor = true;
             btnCancel.Click += btnCancel_Click;
             // 
@@ -61,46 +56,32 @@
             // 
             cbxLanguage.DropDownStyle = ComboBoxStyle.DropDownList;
             cbxLanguage.FormattingEnabled = true;
-            cbxLanguage.Location = new Point(92, 144);
+            resources.ApplyResources(cbxLanguage, "cbxLanguage");
             cbxLanguage.Name = "cbxLanguage";
-            cbxLanguage.Size = new Size(227, 28);
-            cbxLanguage.TabIndex = 2;
             cbxLanguage.SelectedIndexChanged += cbxLanguage_SelectedIndexChanged;
             // 
             // rbMale
             // 
-            rbMale.AutoSize = true;
+            resources.ApplyResources(rbMale, "rbMale");
             rbMale.Checked = true;
-            rbMale.Location = new Point(11, 26);
             rbMale.Name = "rbMale";
-            rbMale.Size = new Size(63, 24);
-            rbMale.TabIndex = 3;
             rbMale.TabStop = true;
-            rbMale.Text = "Male";
             rbMale.UseVisualStyleBackColor = true;
             rbMale.CheckedChanged += rbMale_CheckedChanged;
             // 
             // rbFemale
             // 
-            rbFemale.AutoSize = true;
-            rbFemale.Location = new Point(106, 26);
+            resources.ApplyResources(rbFemale, "rbFemale");
             rbFemale.Name = "rbFemale";
-            rbFemale.Size = new Size(78, 24);
-            rbFemale.TabIndex = 4;
-            rbFemale.Text = "Female";
             rbFemale.UseVisualStyleBackColor = true;
             rbFemale.CheckedChanged += rbFemale_CheckedChanged;
             // 
             // rbAPI
             // 
-            rbAPI.AutoSize = true;
+            resources.ApplyResources(rbAPI, "rbAPI");
             rbAPI.Checked = true;
-            rbAPI.Location = new Point(11, 26);
             rbAPI.Name = "rbAPI";
-            rbAPI.Size = new Size(52, 24);
-            rbAPI.TabIndex = 8;
             rbAPI.TabStop = true;
-            rbAPI.Text = "API";
             rbAPI.UseVisualStyleBackColor = true;
             rbAPI.CheckedChanged += rbAPI_CheckedChanged;
             // 
@@ -108,51 +89,36 @@
             // 
             groupBox1.Controls.Add(rbMale);
             groupBox1.Controls.Add(rbFemale);
-            groupBox1.Location = new Point(12, 12);
+            resources.ApplyResources(groupBox1, "groupBox1");
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(307, 59);
-            groupBox1.TabIndex = 9;
             groupBox1.TabStop = false;
-            groupBox1.Text = "Gender";
             // 
             // groupBox2
             // 
             groupBox2.Controls.Add(rbFile);
             groupBox2.Controls.Add(rbAPI);
-            groupBox2.Location = new Point(12, 73);
+            resources.ApplyResources(groupBox2, "groupBox2");
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(307, 59);
-            groupBox2.TabIndex = 10;
             groupBox2.TabStop = false;
-            groupBox2.Text = "Data source";
             // 
             // rbFile
             // 
-            rbFile.AutoSize = true;
-            rbFile.Location = new Point(106, 26);
+            resources.ApplyResources(rbFile, "rbFile");
             rbFile.Name = "rbFile";
-            rbFile.Size = new Size(53, 24);
-            rbFile.TabIndex = 9;
-            rbFile.Text = "File";
             rbFile.UseVisualStyleBackColor = true;
             rbFile.CheckedChanged += rbFile_CheckedChanged;
             // 
             // label2
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(12, 144);
+            resources.ApplyResources(label2, "label2");
             label2.Name = "label2";
-            label2.Size = new Size(74, 20);
-            label2.TabIndex = 6;
-            label2.Text = "Language";
             // 
             // Settings
             // 
             AcceptButton = btnConfirm;
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = btnCancel;
-            ClientSize = new Size(331, 242);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(label2);
@@ -161,7 +127,6 @@
             Controls.Add(btnConfirm);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Name = "Settings";
-            Text = "Settings";
             Load += Settings_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();

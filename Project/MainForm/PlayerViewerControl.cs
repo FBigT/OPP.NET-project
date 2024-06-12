@@ -32,6 +32,10 @@ namespace MainForm {
             pbMain.Image = image;
         }
 
+        public Image GetImage() {
+            return pbMain.Image;
+        }
+
         public string LoadPictureFromFile() {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Image Files (*.jpg, *.jpeg, *.png) | *.jpg; *.jpeg; *.png";
@@ -39,7 +43,6 @@ namespace MainForm {
             if (ofd.ShowDialog() == DialogResult.OK) {
                 string filePath = ofd.FileName;
                 if (!File.Exists(filePath)) return string.Empty;
-                pbMain.Image = Image.FromFile(filePath);
                 return filePath;
             }
             return string.Empty;
