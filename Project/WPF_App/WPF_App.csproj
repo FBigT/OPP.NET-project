@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="cogwheel.png" />
+    <None Remove="finish.png" />
+    <None Remove="flags.png" />
+    <None Remove="information.png" />
+    <None Remove="no_image_2.jpg" />
+    <None Remove="on-off-button.png" />
+    <None Remove="soccer-pitch-seen-from-air-with-clear-lines.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FifaLib\FifaLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="cogwheel.png" />
+    <Resource Include="finish.png" />
+    <Resource Include="flags.png" />
+    <Resource Include="information.png" />
+    <Resource Include="no_image_2.jpg" />
+    <Resource Include="on-off-button.png" />
+    <Resource Include="soccer-pitch-seen-from-air-with-clear-lines.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

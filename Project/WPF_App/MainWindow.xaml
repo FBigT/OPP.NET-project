@@ -1,0 +1,185 @@
+﻿<Window x:Class="WPF_App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_App"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="1050" Width="1680" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+    <Grid x:Name="gMain">
+        <Button x:Name="btnSettings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="30" Height="30" Click="btnSettings_Click">
+            <Image Stretch="Fill" Source="/cogwheel.png" Height="25" Width="25" RenderTransformOrigin="0.5,0.5">
+                <Image.RenderTransform>
+                    <RotateTransform x:Name="imSettings" Angle="0"/>
+                </Image.RenderTransform>
+            </Image>
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="Button.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="imSettings"
+                     Storyboard.TargetProperty="Angle"
+                     To="60"
+                     Duration="0:0:0.3">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Button.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="imSettings"
+                     Storyboard.TargetProperty="Angle"
+                     To="0"
+                     Duration="0:0:0.3">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Button.Triggers>
+        </Button>
+        <Grid Margin="296,15,296,0" Panel.ZIndex="1" Height="109" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="240*"/>
+                <ColumnDefinition Width="60*"/>
+                <ColumnDefinition Width="200*"/>
+                <ColumnDefinition Width="60*"/>
+                <ColumnDefinition Width="240*"/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="lblFav" Content="TEAM NAME" VerticalAlignment="Top" Height="45" Margin="35,10,5,0" FontWeight="Bold" FontSize="25" Background="{x:Null}" BorderBrush="Black" BorderThickness="0,2,0,0"/>
+            <Label x:Name="lblOther" Content="TEAM NAME" VerticalAlignment="Top" Height="45" Grid.Column="4" Margin="5,10,35,0" HorizontalContentAlignment="Right" FontWeight="Bold" FontSize="25" BorderThickness="0,2,0,0" BorderBrush="Black"/>
+            <Label x:Name="lblDate" Grid.Column="2" Content="DATE" VerticalAlignment="Top" Height="28" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="10,60,10,0" FontWeight="Bold" FontSize="15"/>
+            <Label x:Name="lblTime" Grid.Column="2" Content="TIME" VerticalAlignment="Top" Height="59" FontWeight="Bold" FontSize="40" Margin="10,0,10,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Label x:Name="lblHomeScore" Content="0" HorizontalAlignment="Center" VerticalAlignment="Top" Height="45" Width="50" Grid.Column="1" FontSize="30" BorderBrush="Black" BorderThickness="2,0,0,0"/>
+            <Label x:Name="lblAwayScore" Content="0" HorizontalAlignment="Center" VerticalAlignment="Top" Height="45" Width="50" Grid.Column="3" FontSize="30" HorizontalContentAlignment="Right" BorderThickness="0,0,2,0" BorderBrush="Black" Padding="5,5,5,5" UseLayoutRounding="False"/>
+            <Button x:Name="btnInfoHome" Margin="0,18,0,0" VerticalAlignment="Top" Height="30" HorizontalAlignment="Left" Width="30" Click="btnInfoHome_Click" Tag="home">
+                <Image Stretch="Fill" Source="/information.png" Height="25" Width="25" RenderTransformOrigin="0.5,0.5">
+                    <Image.RenderTransform>
+                        <RotateTransform x:Name="imgInfoHomeRotate" Angle="0"/>
+                    </Image.RenderTransform>
+                </Image>
+                <Button.Triggers>
+                    <EventTrigger RoutedEvent="Button.MouseEnter">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="imgInfoHomeRotate"
+                                                     Storyboard.TargetProperty="Angle"
+                                                     To="360"
+                                                     Duration="0:0:0.5">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseInOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Button.MouseLeave">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="imgInfoHomeRotate"
+                                                     Storyboard.TargetProperty="Angle"
+                                                     To="0"
+                                                     Duration="0:0:0.5">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseInOut"/>
+                                </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button x:Name="btnInfoAway" Margin="0,18,0,0" VerticalAlignment="Top" Height="30" Grid.Column="4" HorizontalAlignment="Right" Width="30" Click="btnInfoAway_Click" Tag="away">
+                <Image Stretch="Fill" Source="/information.png" Height="25" Width="25" RenderTransformOrigin="0.5,0.5">
+                    <Image.RenderTransform>
+                        <RotateTransform x:Name="imgInfoAwayRotate" Angle="0"/>
+                    </Image.RenderTransform>
+                </Image>
+                <Button.Triggers>
+                    <EventTrigger RoutedEvent="Button.MouseEnter">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="imgInfoAwayRotate"
+                                     Storyboard.TargetProperty="Angle"
+                                     To="360"
+                                     Duration="0:0:0.5">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseInOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Button.MouseLeave">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="imgInfoAwayRotate"
+                                     Storyboard.TargetProperty="Angle"
+                                     To="0"
+                                     Duration="0:0:0.5">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseInOut"/>
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Button.Triggers>
+            </Button>
+        </Grid>
+        <Grid x:Name="gOthers" Margin="0,0,55,0" HorizontalAlignment="Right" Width="173" Height="105" VerticalAlignment="Top" Panel.ZIndex="-1">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFDADADA"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <ComboBox x:Name="cbxOpposers" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Width="152" Height="33" FontSize="15" SelectionChanged="cbxOpposers_SelectionChanged"/>
+            <Label x:Name="lblOpposingSelector" Content="Opposing team" HorizontalAlignment="Center" VerticalAlignment="Top" Width="134" HorizontalContentAlignment="Center" Margin="0,10,0,0" FontWeight="Bold" FontSize="15"/>
+        </Grid>
+        <Button x:Name="btnOthers" Margin="0,10,10,0" VerticalAlignment="Top" Height="30" Click="btnOthers_Click" HorizontalAlignment="Right" Width="30">
+            <Image Stretch="Fill" Source="/finish.png" Height="25" Width="25"/>
+        </Button>
+        <Grid x:Name="gField" Margin="0,95,0,0">
+            <Grid Height="29" VerticalAlignment="Top" Panel.ZIndex="-1">
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FF818181" Offset="1"/>
+                        <GradientStop Color="White" Offset="0"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+            </Grid>
+            <Grid x:Name="gPlayersView" Margin="0,29,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel x:Name="pAwayGoalGuy" Grid.Column="7"/>
+                <StackPanel x:Name="pAwayDef" Grid.Column="6"/>
+                <StackPanel x:Name="pAwayMid" Grid.Column="5"/>
+                <StackPanel x:Name="pAwayMainGuy" Grid.Column="4"/>
+                <StackPanel x:Name="pHomeMainGuy" Grid.Column="3"/>
+                <StackPanel x:Name="pHomeMid" Grid.Column="2"/>
+                <StackPanel x:Name="pHomeDef" Grid.Column="1"/>
+                <StackPanel x:Name="pHomeGoalGuy" Grid.Column="0"/>
+            </Grid>
+            <Image Margin="0,28,0,0" Source="/soccer-pitch-seen-from-air-with-clear-lines.jpg" Stretch="Fill" Panel.ZIndex="-2"/>
+        </Grid>
+        <Grid Height="2" VerticalAlignment="Top" Background="Black"/>
+        <Button x:Name="btnClose" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top" Width="30" Height="30" Click="btnClose_Click">
+            <Image Stretch="Fill" Source="/on-off-button.png" Height="25" Width="25"/>
+        </Button>
+    </Grid>
+</Window>

@@ -1,0 +1,46 @@
+﻿<Window x:Class="WPF_App.TeamInfo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_App"
+        mc:Ignorable="d"
+        Title="TeamInfo" Height="296" Width="267" ResizeMode="NoResize" Closing="Window_Closing">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FFA3A3A3"/>
+                <GradientStop Color="White" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="130*"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="130*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin="0,0,1,0" Grid.ColumnSpan="2">
+            <Label x:Name="_LTeam" Content="Team"/>
+            <Label x:Name="_LCode" Content="Code"/>
+            <Label x:Name="_LPlayedGames" Content="Played games"/>
+            <Label x:Name="_LWonGames" Content="Won games"/>
+            <Label x:Name="_LLostGames" Content="Lost games"/>
+            <Label x:Name="_LDraws" Content="Draws"/>
+            <Label x:Name="_LScoredGoals" Content="Scored goals"/>
+            <Label x:Name="_LLostGoals" Content="Lost goals"/>
+            <Label x:Name="_LGoalDifference" Content="Goal difference"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Margin="1,0,0,0" Grid.ColumnSpan="2">
+            <Label x:Name="lblTeam" Content="N/A"/>
+            <Label x:Name="lblCode" Content="N/A"/>
+            <Label x:Name="lblPlayed" Content="N/A"/>
+            <Label x:Name="lblWon" Content="N/A"/>
+            <Label x:Name="lblLost" Content="N/A"/>
+            <Label x:Name="lblDraw" Content="N/A"/>
+            <Label x:Name="lblScore" Content="N/A"/>
+            <Label x:Name="lblFailed" Content="N/A"/>
+            <Label x:Name="lblDif" Content="N/A"/>
+        </StackPanel>
+        <StackPanel x:Name="pColor" Grid.Column="1" Background="Black"/>
+
+    </Grid>
+</Window>

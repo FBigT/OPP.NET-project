@@ -59,6 +59,9 @@ namespace MainForm {
                     MessageBox.Show("An error accured while reading appSettings.txt", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            else {
+
+            }
         }
         private void SetLocalization() {
             if (selectedLanguage == Language.Croatian) {
@@ -77,6 +80,24 @@ namespace MainForm {
             }
             else {
                 cbxLanguage.SelectedIndex = 0;
+            }
+
+            if (selectedGender == Gender.Male) {
+                rbMale.Checked = true;
+                rbFemale.Checked = !rbMale.Checked;
+            }
+            else {
+                rbFemale.Checked = true;
+                rbMale.Checked = !rbFemale.Checked;
+            }
+
+            if (selectedDatasource == DataSource.API) {
+                rbAPI.Checked = true;
+                rbFile.Checked = !rbAPI.Checked;
+            }
+            else {
+                rbFile.Checked = true;
+                rbAPI.Checked = !rbFile.Checked;
             }
         }
 

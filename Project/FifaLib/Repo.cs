@@ -21,6 +21,7 @@ namespace FifaLib {
         private static readonly HttpClient _clinet;
 
         private static JArray _matches;
+        private static List<Match> _matchesList = new List<Match>();
 
         private static readonly string playerImagePath;
         private static readonly string appSettingsPath;
@@ -34,9 +35,6 @@ namespace FifaLib {
 
         private string? dataFilter;
         private string? jData;
-
-        //public delegate void MatcheChangeEventHandler(object sender, EventArgs args); 
-        //public event MatcheChangeEventHandler OnMatcheChange;
 
         static Repo() {
             _clinet = new HttpClient();
@@ -58,16 +56,44 @@ namespace FifaLib {
 
         public void SetDataFilter(string? filter) => dataFilter = filter;
 
-        public async Task<List<GameEvent>> FetchEvents(Gender gender, DataSource source, string filter) {
-            if (dataFilter != filter || jData == null) {
-                jData = await FetchMatchesFiltered(gender, source, filter);
-                dataFilter = filter;
-            }
-
-            _matches.Clear();
-            _matches = JArray.Parse(jData);
+        public async Task<List<Match>> FetchMatches(Gender gender, DataSource source, string filter) {
+            await DataSwitch(gender, source, filter);
 
             try {
+                _matchesList.Clear();
+                _matchesList.AddRange(_matches.ToObject<List<Match>>());
+                return _matchesList;
+            }
+            catch (Exception e) {
+                Console.WriteLine($"Matches read failed from source: \"{source}\"\n" + e.ToString());
+                throw new IOException();
+            }
+        }
+
+        public async Task<List<GameEvent>> FetchEvents(Gender gender, DataSource source, string filter, Match? foundMatch = null, bool isOpposing = false) {
+            await DataSwitch(gender, source, filter);
+
+            try {
+
+                if (foundMatch != null) {
+                    int foundIndex = _matchesList.IndexOf(_matchesList.Find(m => m.FifaId == foundMatch.FifaId));
+                    var a = _matches[foundIndex];
+
+                    List<GameEvent> gm = new List<GameEvent>();
+
+                    if (isOpposing) {
+                        foreach (var item in a["away_team_events"]) {
+                            gm.Add(item.ToObject<GameEvent>());
+                        }
+                        return gm;
+                    }
+                    else {
+                        foreach (var item in a["home_team_events"]) {
+                            gm.Add(item.ToObject<GameEvent>());
+                        }
+                        return gm;
+                    }
+                }
 
                 JArray jEvents = new JArray();
                 List<GameEvent> gameEvents = new List<GameEvent>();
@@ -88,13 +114,7 @@ namespace FifaLib {
         }
 
         public async Task<List<Player>> FetchPlayers(Gender gender, DataSource source, string filter) {
-            if (dataFilter != filter || jData == null) {
-                jData = await FetchMatchesFiltered(gender, source, filter);
-                dataFilter = filter;
-            }
-
-            _matches.Clear();
-            _matches = JArray.Parse(jData);
+            await DataSwitch(gender, source, filter);
 
             try {
                 JArray jPlayers = new JArray();
@@ -102,6 +122,7 @@ namespace FifaLib {
                     jPlayers = new JArray(_matches[0]["home_team_statistics"]["starting_eleven"].Union((JArray)_matches[0]["home_team_statistics"]["substitutes"]));
                 else
                     jPlayers = new JArray(_matches[0]["away_team_statistics"]["starting_eleven"].Union((JArray)_matches[0]["away_team_statistics"]["substitutes"]));
+
 
                 return jPlayers.ToObject<List<Player>>();
             }
@@ -111,30 +132,55 @@ namespace FifaLib {
             }
         }
 
-        public async Task<List<TeamResults>> FetchTeams(Gender gender, DataSource source) {
-            string jstring = string.Empty;
+        public List<Player> ExtractPlayersFromMatches(List<Match> matches, string home, string opposers, bool extractOpposers) {
 
-            if (source == DataSource.API) {
-                string path = gender == Gender.Male ? API_MenTeamsResults : API_WomenTeamsResults;
-                jstring = await ExtractDataSerialized(source, path);
+            try {
+                JArray jPlayers = new JArray();
+
+                int foundIndexHome = -1, foundIndexAway = -1;
+                foundIndexHome = matches.IndexOf(matches.Find(m => m.HomeTeam.Code == home && m.AwayTeam.Code == opposers));
+                foundIndexAway = matches.IndexOf(matches.Find(m => m.AwayTeam.Code == home && m.HomeTeam.Code == opposers));
+
+                if (foundIndexHome != -1) {
+                    if (!extractOpposers) {
+                        jPlayers = LocatePlayers(foundIndexHome, home);
+                    }
+                    else {
+                        jPlayers = LocatePlayers(foundIndexHome, opposers);
+                    }
+                    return jPlayers.ToObject<List<Player>>();
+                }
+                if (foundIndexAway != -1) {
+                    if (!extractOpposers) {
+                        jPlayers = LocatePlayers(foundIndexAway, home);
+                    }
+                    else {
+                        jPlayers = LocatePlayers(foundIndexAway, opposers);
+                    }
+                    return jPlayers.ToObject<List<Player>>();
+                }
+                throw new ArgumentException();
             }
-            else if (source == DataSource.File) {
-                StringBuilder sb = new StringBuilder();
-                string path = gender == Gender.Male ? FILE_Men : FILE_Women;
-                sb.Append(path).Append(@$"\teams.json");
-                jstring = await ExtractDataSerialized(source, sb.ToString());
+            catch (Exception e) {
+                Console.WriteLine($"Player read failed\n" + e.ToString());
+                throw new ArgumentException();
             }
-            return JsonConvert.DeserializeObject<List<TeamResults>>(jstring);
+        }
+
+        private JArray LocatePlayers(int index, string filter) {
+            JArray jPlayers = new JArray();
+
+
+            if (_matches[index]["home_team"].Value<string>("code") == filter)
+                jPlayers = new JArray(_matches[index]["home_team_statistics"]["starting_eleven"].Union(new JArray()));
+            else
+                jPlayers = new JArray(_matches[index]["away_team_statistics"]["starting_eleven"].Union(new JArray()));
+
+            return jPlayers;
         }
 
         public async Task<List<Visitor>> FetchVisitors(Gender gender, DataSource source, string filter) {
-            if (dataFilter != filter || jData == null) {
-                jData = await FetchMatchesFiltered(gender, source, filter);
-                dataFilter = filter;
-            }
-
-            _matches.Clear();
-            _matches = JArray.Parse(jData);
+            await DataSwitch(gender, source, filter);
 
             try {
 
@@ -149,6 +195,56 @@ namespace FifaLib {
             catch (Exception e) {
                 Console.WriteLine($"Visitor read failed from source: \"{source}\"\n" + e.ToString());
                 throw new IOException();
+            }
+        }
+
+        public async Task<List<TeamResults>> FetchTeams(Gender gender, DataSource source) {
+            string jstring = string.Empty;
+
+            if (source == DataSource.API) {
+                string path = gender == Gender.Male ? API_MenTeamsResults : API_WomenTeamsResults;
+                jstring = await ExtractDataSerialized(source, path);
+            }
+            else if (source == DataSource.File) {
+                StringBuilder sb = new StringBuilder();
+                string path = gender == Gender.Male ? FILE_Men : FILE_Women;
+                sb.Append(path).Append(@$"\results.json");
+                jstring = await ExtractDataSerialized(source, sb.ToString());
+            }
+            return JsonConvert.DeserializeObject<List<TeamResults>>(jstring);
+        }
+
+        private async Task DataSwitch(Gender gender, DataSource source, string filter) {
+            if (source == DataSource.API) {
+                if (dataFilter != filter || jData == null) {
+                    jData = await FetchMatchesFiltered(gender, source, filter);
+                    dataFilter = filter;
+
+                    _matches.Clear();
+                    _matches = JArray.Parse(jData);
+                }
+                return;
+            }
+            if (source == DataSource.File) {
+                if (dataFilter != filter || jData == null) {
+                    jData = await FetchMatchesFiltered(gender, source, filter);
+
+                    _matches.Clear();
+                    _matches = JArray.Parse(jData);
+
+                    JObject[] stuff = _matches.Where(jOb => (string)jOb["home_team"]["code"] == filter || (string)jOb["away_team"]["code"] == filter).Select(o => (JObject)o).ToArray();
+                    dataFilter = filter;
+
+
+                    _matches.Clear();
+                    foreach (var ob in stuff) {
+                        _matches.Add(ob);
+                    }
+                }
+                return;
+            }
+            else {
+                throw new Exception("Data source is not set or is invalid.");
             }
         }
 
@@ -213,6 +309,7 @@ namespace FifaLib {
                 asd.language = (Language)Enum.Parse(typeof(Language), lines[0]);
                 asd.gender = (Gender)Enum.Parse(typeof(Gender), lines[1]);
                 asd.source = (DataSource)Enum.Parse(typeof(DataSource), lines[2]);
+                if (lines.Length >= 4) asd.resolution = (Resolution)Enum.Parse(typeof(Resolution), lines[3]);
 
                 return asd;
             }
@@ -225,6 +322,23 @@ namespace FifaLib {
         public bool SaveAppSettings(Language language, Gender gender, DataSource dataSource) {
             try {
                 string[] data = new string[] { $"Language:{language}", $"Gender:{gender}", $"Datasource:{dataSource}" };
+                File.WriteAllLines(Path.Combine(appSettingsPath, appSettingsFile), data);
+                return true;
+            }
+            catch (Exception e) {
+                Console.WriteLine("Data save failed\n" + e.Message);
+                return false;
+            }
+        }
+
+        public bool SaveAppSettings(AppSettingsData appSettingsData) {
+            try {
+                string[] data = new string[] {
+                    $"Language:{appSettingsData.language}",
+                    $"Gender:{appSettingsData.gender}",
+                    $"Datasource:{appSettingsData.source}",
+                    $"Resolution:{appSettingsData.resolution}"
+                };
                 File.WriteAllLines(Path.Combine(appSettingsPath, appSettingsFile), data);
                 return true;
             }

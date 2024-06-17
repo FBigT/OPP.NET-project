@@ -1,0 +1,40 @@
+﻿<Window x:Name="SettingsWindows" x:Class="WPF_App.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_App"
+        mc:Ignorable="d"
+        Title="Settings" Height="293" Width="322" ResizeMode="NoResize" Loaded="SettingsWindows_Loaded" WindowStartupLocation="CenterScreen" KeyDown="SettingsWindows_KeyDown">
+    <Grid Margin="0,0,0,-6">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel x:Name="spSettings" HorizontalAlignment="Center" Width="266" Height="168" VerticalAlignment="Top" Margin="0,10,0,0" Visibility="Hidden">
+            <Label Content="Language" Width="120" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="30"/>
+            <ComboBox x:Name="cbxLanguage" Width="120" Height="25" SelectionChanged="cbxLanguage_SelectionChanged">
+                <Label Content="Label"/>
+            </ComboBox>
+            <Label Content="Resolution" Width="120" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="30"/>
+            <ComboBox x:Name="cbxResolution" Width="120" Height="25" SelectionChanged="cbxResolution_SelectionChanged"/>
+            <Label Content="Gender" Width="120" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="30"/>
+            <ComboBox x:Name="cbxGender" Width="120" Height="25" SelectionChanged="cbxGender_SelectionChanged"/>
+        </StackPanel>
+        <Grid x:Name="gConfirmCancel" Margin="0,203,0,0" HorizontalAlignment="Center" Width="302" Height="60" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="btnConfirm" Content="Confirm" Click="btnConfirm_Click" VerticalContentAlignment="Center" Margin="5,0,5,0" Height="40" VerticalAlignment="Top"/>
+            <Button x:Name="btnCancel" Content="Cancel" Click="btnCancel_Click" VerticalContentAlignment="Center" Margin="5,0,5,0" Grid.Column="1" Height="40" VerticalAlignment="Top"/>
+        </Grid>
+        <StackPanel x:Name="spRepres" Margin="54,75,54,100">
+            <Label Content="Favourite representation" HorizontalContentAlignment="Center"/>
+            <ComboBox x:Name="cbxRepres" Width="200" SelectionChanged="cbxRepres_SelectionChanged"/>
+        </StackPanel>
+
+    </Grid>
+</Window>

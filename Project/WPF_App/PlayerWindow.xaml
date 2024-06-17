@@ -1,0 +1,27 @@
+﻿<Window x:Class="WPF_App.PlayerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_App"
+        mc:Ignorable="d"
+        Title="PlayerWindow" Height="361" Width="218" ResizeMode="NoResize">
+    <Grid>
+        <StackPanel>
+            <StackPanel.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF6C6C6C"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </StackPanel.Background>
+            <Label x:Name="lblName" Content="NAME" BorderBrush="Black" BorderThickness="0,0,0,2"/>
+            <Label x:Name="lblNumber" Content="Shirt number: "/>
+            <Label x:Name="lblPosition" Content="Position: "/>
+            <CheckBox x:Name="cbxCaptain" Content="Captain" Height="26" VerticalContentAlignment="Center" IsEnabled="False"/>
+            <Label x:Name="lblGoals" Content="Goals: " BorderBrush="Black" BorderThickness="0,2,0,0"/>
+            <Label x:Name="lblYellow" Content="Yellow cards: " Margin="0,0,0,10"/>
+            <Image x:Name="imgMain" Height="147" Source="/no_image_2.jpg" Stretch="Fill" Width="148"/>
+        </StackPanel>
+
+    </Grid>
+</Window>

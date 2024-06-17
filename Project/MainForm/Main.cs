@@ -1,7 +1,7 @@
 using FifaLib;
 using FifaLib.Models;
-using iTextSharp.text.pdf;
 using MainForm.Properties;
+using System.Diagnostics;
 using System.Drawing.Printing;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -102,9 +102,9 @@ namespace MainForm {
                 currentGender = ads.gender;
                 currentDatasource = ads.source;
 
-                gbRepresentation.Text = $"{title} ({currentGender})";
-
                 SetLocalization();
+
+                gbRepresentation.Text = $"{title} ({currentGender})";
             }
             catch (Exception) {
                 MessageBox.Show("Settings are invalid or corupted.\nSettings must be set again.", "Settings error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -112,6 +112,13 @@ namespace MainForm {
                 Dispose();
             }
         }
+
+        private void Redo() {
+            MessageBox.Show("App must restart for changes to take effect.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Dispose();
+            Application.Restart();
+        }
+
         private void LoadFavs() {
             try {
                 UserSettingsData usd = Repo.Instance.GetUserSettings();
@@ -126,7 +133,6 @@ namespace MainForm {
                         fp.IsFavourite = true;
                         favoritePlayers.Add(fp);
                         lbxFavourites.Items.Add(fp.ToDisplay());
-
                     }
                 }
             }
@@ -143,7 +149,7 @@ namespace MainForm {
 
             if (Repo.Instance.UserSettingExists()) {
                 try {
-                    var found = loadedTeams.Find(x => x.FifaCode == currentChampionship);
+                    var found = loadedTeams.Find(x => x.FifaCode.Equals(currentChampionship));
 
                     cbxRepresentation.SelectedIndex = cbxRepresentation.FindStringExact($"{found.Country}({found.FifaCode})");
                 }
@@ -196,6 +202,7 @@ namespace MainForm {
             if (settingsForm.ShowDialog() == DialogResult.OK) {
                 loading = true;
                 ValidateForm();
+                Redo();
                 SetRepresentationCbx();
                 SetDisplayLists();
                 if (selectedPlayer != null)
@@ -231,7 +238,6 @@ namespace MainForm {
             selectedPlayer = players.Find(p => p.ShirtNumber == shirtNum);
 
             playerViewerControl1.FillView(selectedPlayer);
-
             var imgPath = Repo.Instance.GetImagePath(selectedPlayer);
 
             if (Repo.Instance.GetImagePath(selectedPlayer).Item2) {
@@ -265,15 +271,11 @@ namespace MainForm {
                 string path = playerViewerControl1.LoadPictureFromFile();
                 if (path == string.Empty) return;
 
-                //if (playerViewerControl1.GetImage() != Properties.Resources.no_image_2) {
-                //    playerViewerControl1.SetPicture(Properties.Resources.no_image_2);
-                //    FillEventPanel(true, Properties.Resources.no_image_2, selectedPlayer);
-                //}
-
                 try {
                     string savedPath = Repo.Instance.SaveImage(path, selectedPlayer);
 
                     playerViewerControl1.SetPicture(savedPath);
+                    FillEventPanel(true, Image.FromFile(savedPath), selectedPlayer);
                     FillEventPanel(true, Image.FromFile(savedPath), selectedPlayer);
                 }
                 catch (Exception) {

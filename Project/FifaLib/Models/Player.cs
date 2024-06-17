@@ -17,6 +17,14 @@ namespace FifaLib.Models {
         [JsonIgnore]
         public bool IsFavourite { get; set; }
 
+        public Player(string? name, bool isCaptain, long shirtNumber, string? position, bool isFavourite) {
+            Name = name;
+            IsCaptain = isCaptain;
+            ShirtNumber = shirtNumber;
+            Position = position;
+            IsFavourite = isFavourite;
+        }
+
         public override string ToString() {
             return $"Name:{Name} IsCaptain:{(IsCaptain ? "true" : "false")} ShirtNumber:{ShirtNumber} Position:{Position}";
         }

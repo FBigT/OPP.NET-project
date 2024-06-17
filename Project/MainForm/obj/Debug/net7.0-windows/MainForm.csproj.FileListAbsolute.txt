@@ -21,8 +21,6 @@ C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\bin\Debug\net7.0-windows\MainForm.dll
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\bin\Debug\net7.0-windows\MainForm.pdb
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\bin\Debug\net7.0-windows\hr\MainForm.resources.dll
-C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\bin\Debug\net7.0-windows\BouncyCastle.Crypto.dll
-C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\bin\Debug\net7.0-windows\itextsharp.dll
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\bin\Debug\net7.0-windows\Microsoft.Extensions.Configuration.dll
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\bin\Debug\net7.0-windows\Microsoft.Extensions.Configuration.Abstractions.dll
 C:\Users\Lenovo Legion 5\OneDrive\Desktop\Algebra\Semester_4\NET\OPP.NET-project\Project\MainForm\bin\Debug\net7.0-windows\Microsoft.Extensions.Configuration.FileExtensions.dll

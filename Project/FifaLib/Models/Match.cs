@@ -26,10 +26,25 @@ namespace FifaLib.Models {
         [JsonProperty("attendance")]
         public long Attendance { get; set; }
 
-        [JsonProperty("starting_eleven")]
-        public List<Player> FirstEleven{ get; set; }
+        [JsonProperty("home_team_country")]
+        public string HomeTeamCountry { get; set; }
 
-        [JsonProperty("substitutes")]
-        public List<Player> Substitutes { get; set; }
+        [JsonProperty("away_team_country")]
+        public string AwayTeamCountry { get; set; }
+
+        [JsonProperty("datetime")]
+        public DateTimeOffset Datetime { get; set; }
+
+        [JsonProperty("winner")]
+        public string Winner { get; set; }
+
+        [JsonProperty("winner_code")]
+        public string WinnerCode { get; set; }
+
+        [JsonProperty("home_team")]
+        public Team? HomeTeam {  get; set; }
+
+        [JsonProperty("away_team")]
+        public Team? AwayTeam { get; set; }
     }
 }

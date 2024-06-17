@@ -296,9 +296,6 @@
   <data name="rbFile.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="rbFile.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
   <data name="rbFile.Location" type="System.Drawing.Point, System.Drawing">
     <value>106, 26</value>
   </data>
