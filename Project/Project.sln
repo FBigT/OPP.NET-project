@@ -5,11 +5,9 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FifaLib", "FifaLib\FifaLib.csproj", "{4BBF0E2B-3396-4F80-B475-927FF96A6947}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppTest", "ConsoleAppTest\ConsoleAppTest.csproj", "{D947D8F7-B53D-42AC-8BE7-9D964BB21A5F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MainForm", "MainForm\MainForm.csproj", "{F97E809C-D07D-4070-AD54-70BACD886024}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_App", "WPF_App\WPF_App.csproj", "{FD754116-06FA-4C64-8F5E-FCF45FF1C143}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPF_App", "WPF_App\WPF_App.csproj", "{FD754116-06FA-4C64-8F5E-FCF45FF1C143}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +19,6 @@ Global
 		{4BBF0E2B-3396-4F80-B475-927FF96A6947}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BBF0E2B-3396-4F80-B475-927FF96A6947}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BBF0E2B-3396-4F80-B475-927FF96A6947}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D947D8F7-B53D-42AC-8BE7-9D964BB21A5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D947D8F7-B53D-42AC-8BE7-9D964BB21A5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D947D8F7-B53D-42AC-8BE7-9D964BB21A5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D947D8F7-B53D-42AC-8BE7-9D964BB21A5F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F97E809C-D07D-4070-AD54-70BACD886024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F97E809C-D07D-4070-AD54-70BACD886024}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F97E809C-D07D-4070-AD54-70BACD886024}.Release|Any CPU.ActiveCfg = Release|Any CPU
